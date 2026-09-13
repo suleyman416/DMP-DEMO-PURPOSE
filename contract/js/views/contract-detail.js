@@ -29,25 +29,9 @@ window.ContractDetailView = (function () {
         const contractNum = contract.contract_number || contract.id.replace(/^[A-Za-z]+-/, "");
 
         root.innerHTML = `
+            ${window.UI.breadcrumb("Contract management", "Contract # " + contractNum)}
             <div class="flex-column h-full page-viewport pageWrapper-iFXGCW" style="padding: 16px 28px; width: 100%;">
                 <div>
-                    <!-- Breadcrumbs matching 03_contract_detail.png -->
-                    <div class="motion-content-header contentHeader-IxOykS" style="margin-bottom: 8px;">
-                        <nav class="flex-align-center breadcrumbs-mhE9Ok">
-                            <span class="flex-align-center item-Vrkft2 grayed-XXam4F">
-                                <a href="#/contracts" class="link-h7l698">Contracts</a>
-                                <span class="separator-p6lKQR">
-                                    <svg width="14" height="8" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-90deg);">
-                                        <path d="M8.18605 6.59223L14.7311 0.223792C14.7839 0.171354 14.8465 0.129896 14.9154 0.101818C14.9842 0.0737404 15.058 0.0596004 15.1324 0.0602161C15.2067 0.0608319 15.2802 0.0761914 15.3486 0.105405C15.417 0.13462 15.479 0.177108 15.5308 0.230413C15.5827 0.283717 15.6235 0.34678 15.6508 0.41595C15.6782 0.48512 15.6915 0.559025 15.6901 0.633388C15.6887 0.707751 15.6725 0.781096 15.6426 0.849177C15.6126 0.917259 15.5695 0.978725 15.5156 1.03002L8.57833 7.78022C8.47332 7.88239 8.3326 7.93956 8.18609 7.93956C8.03958 7.93957 7.89885 7.88241 7.79383 7.78024L0.856138 1.03044C0.802276 0.97915 0.759123 0.917686 0.729173 0.849606C0.699222 0.781527 0.683072 0.708183 0.681653 0.63382C0.680235 0.559457 0.693579 0.485552 0.720912 0.41638C0.748245 0.347208 0.789024 0.284143 0.84089 0.230835C0.892757 0.177528 0.954682 0.135036 1.02308 0.105818C1.09147 0.0765998 1.16499 0.061236 1.23936 0.060616C1.31374 0.059996 1.38749 0.0741318 1.45637 0.102205C1.52524 0.130279 1.58787 0.171734 1.64061 0.224169L8.18605 6.59223Z" fill="currentColor"></path>
-                                    </svg>
-                                </span>
-                            </span>
-                            <span class="flex-align-center item-Vrkft2">
-                                <a href="#/contracts/${contractId}" class="link-h7l698">Contract # ${contractNum}</a>
-                            </span>
-                        </nav>
-                    </div>
-
                     <!-- 3-Column Metadata Hero matching 03_contract_detail.png -->
                     <div>
                         <div class="verticalExtraSection-KdA1Jm" id="contract-metadata-section" style="${isHeroCollapsed ? 'display:none;' : 'display:block;'}">

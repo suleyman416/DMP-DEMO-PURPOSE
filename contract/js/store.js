@@ -137,6 +137,12 @@
             s.session.user = id;
         });
     }
+    function setLang(lang) {
+        set(s => {
+            if (!s.session) s.session = {};
+            s.session.lang = lang;
+        });
+    }
 
     function contracts() { return state.contracts || []; }
     function contractById(id) {
@@ -195,7 +201,7 @@
 
     window.Store = {
         init, get, set, reset, subscribe, uid,
-        session, users, currentUser, setUser,
+        session, users, currentUser, setUser, setLang,
         contracts, contractById,
         pricebooks, pricebooksByContract, pricebookById,
         lineItems, lineItemsByPricebook, lineItemById,

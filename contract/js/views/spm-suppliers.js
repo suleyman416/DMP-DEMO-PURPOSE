@@ -26,10 +26,7 @@ window.SPMSuppliersView = (function () {
         const suppliersList = Object.values(suppliersMap);
 
         root.innerHTML = `
-            ${window.UI.renderBreadcrumbs([
-                { label: "Contract", hash: "#/contracts" },
-                { label: "SPM Suppliers", hash: "#/spm" }
-            ])}
+            ${window.UI.breadcrumb("Contract management", "SPM Suppliers")}
 
             <div class="main-content" style="max-width: 1400px; margin: 0 auto;">
                 <div class="toolbar">

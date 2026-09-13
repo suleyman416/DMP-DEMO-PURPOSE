@@ -20,6 +20,7 @@ window.ContractFormView = (function () {
         ));
 
         root.innerHTML = `
+            ${window.UI.breadcrumb("Contract management", "Create contract")}
             <div class="content-TnO62i">
                 <div class="backContainer-C5JwWn">
                     <button class="inline-flex-center button-z6sbMq backButton-rnKRBd link-xtI0I7 primary-wQbOYq" data-act="go-back">

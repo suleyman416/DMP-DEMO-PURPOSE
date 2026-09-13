@@ -27,10 +27,7 @@ window.CTRRequestsView = (function () {
         const rejectedCount = allRequests.filter(r => r.status === "Rejected").length;
 
         root.innerHTML = `
-            ${window.UI.renderBreadcrumbs([
-                { label: "Contract", hash: "#/contracts" },
-                { label: "CTR Requests", hash: "#/ctr-requests" }
-            ])}
+            ${window.UI.breadcrumb("Contract management", "CTR Requests")}
 
             <div class="main-content" style="max-width: 1400px; margin: 0 auto; padding: 20px 24px 40px;">
                 <div class="toolbar" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">

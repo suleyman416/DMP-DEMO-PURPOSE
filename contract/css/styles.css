@@ -34,7 +34,7 @@ html, body { height: 100%; }
 body {
     font-family: var(--font-family);
     color: var(--text-dark);
-    background: #F8F9FA;
+    background: #FFFFFF;
     -webkit-font-smoothing: antialiased;
     font-size: 14px;
 }
@@ -1040,8 +1040,8 @@ a { color: inherit; }
    Contract Module Specific Additions (100% DMP Design System)
    ============================================================ */
 
-/* Filter Card in Sidebar */
-.filter-card {
+/* Legacy Filter Card in Sidebar (deprecated) */
+.filter-card-legacy {
     background: #fff;
     border: 1px solid var(--border-soft);
     border-radius: 8px;
@@ -1450,8 +1450,8 @@ th.pb-sticky-0, th.pb-sticky-1, th.pb-sticky-2, th.pb-sticky-3 { background: #F4
     display: none !important;
 }
 
-/* Filter Card */
-.filter-card {
+/* Filter Card (legacy2) */
+.filter-card-legacy2 {
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
