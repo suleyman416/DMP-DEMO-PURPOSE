@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dmp — Digital Material Purchasing</title>
+    <link rel="icon" type="image/svg+xml" href="demand_planning/img/favicon.svg" data-asset="favicon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { zoom: 0.9; }   /* the page reads like 90% browser zoom */
+        body { font-family: 'Urbanist', -apple-system, sans-serif; background: #fff; color: #1a1a1a; -webkit-font-smoothing: antialiased; }
+
+        /* ---- top navbar ---- */
+        .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid #EFEFEF; position: sticky; top: 0; background: #fff; z-index: 10; }
+        .nav-left { display: flex; align-items: center; gap: 26px; }
+        .burger { background: none; border: none; cursor: pointer; display: flex; padding: 4px; }
+        .logo img { height: 34px; display: block; }
+        .nav-right { display: flex; align-items: center; gap: 30px; }
+        .nav-ic { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; color: #333; text-decoration: none; }
+        .nav-ic .badge { position: absolute; top: -7px; right: 6px; background: #E8402A; color: #fff; font-size: 10px; font-weight: 700; border-radius: 9px; padding: 1px 5px; }
+        .profile { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: #B9B9B9; }
+        .p-name { font-weight: 700; font-size: 16px; }
+        .p-co { color: #8a8a8a; font-size: 13.5px; }
+        @media (max-width: 640px) { .nav-ic span, .p-co { display: none; } }
+
+        /* ---- hero + cards ---- */
+        .wrap { max-width: 1000px; margin: 0 auto; padding: 64px 24px 90px; }
+        h1 { font-size: 42px; font-weight: 500; text-align: center; line-height: 1.25; max-width: 840px; margin: 0 auto; }
+        .sub { text-align: center; color: #2e2e2e; font-size: 17px; line-height: 1.55; max-width: 960px; margin: 26px auto 70px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 92px 100px; justify-items: center; }
+        @media (max-width: 860px) { .grid { grid-template-columns: 1fr; gap: 40px; } h1 { font-size: 31px; } }
+        .card { background: #CDD2B4; border-radius: 10px; padding: 36px 38px 30px; display: flex; flex-direction: column; width: 100%; max-width: 436px; min-height: 315px; transition: transform .18s, box-shadow .18s; }
+        a.card { color: inherit; text-decoration: none; cursor: pointer; }
+        a.card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(40,50,10,.18); }
+        .card.soon { opacity: .7; }
+        .ic { width: 68px; height: 68px; border-radius: 16px; background: #333D13; display: flex; align-items: center; justify-content: center; }
+        .ic svg { color: #fff; }
+        .card h2 { font-size: 25px; font-weight: 500; margin: 52px 0 16px; }
+        .card p { font-size: 16.5px; line-height: 1.42; color: #1f1f1f; flex: 1; }
+        .go { display: inline-flex; align-items: center; gap: 12px; font-size: 17px; margin-top: 24px; font-weight: 500; }
+        .go svg { transition: transform .18s; }
+        a.card:hover .go svg { transform: translateX(5px); }
+        .soon .go { color: #4c4c3c; font-style: italic; }
+    </style>
+</head>
+<body>
+    <header class="nav">
+        <div class="nav-left">
+            <button class="burger" title="Menu">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <a class="logo" href="./"><img src="demand_planning/img/logo.svg" alt="dmp" data-asset="logo"></a>
+        </div>
+        <div class="nav-right">
+            <a class="nav-ic" href="sourcing/" data-mod="sourcing" title="Notifications">
+                <span class="badge">9+</span>
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span>Notifications</span>
+            </a>
+            <a class="nav-ic" href="demand_planning/#/cart" data-mod="dp-cart" title="Shopping cart">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Shopping cart</span>
+            </a>
+            <div class="profile">
+                <div class="avatar"></div>
+                <div>
+                    <div class="p-name">Demo Customer</div>
+                    <div class="p-co">DMP Demo Company</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="wrap">
+        <h1>Elevating Procurement Through the Power of Automation</h1>
+        <p class="sub">At dmp, we've engineered a unique solution to elevate your procurement process, ensuring efficiency, accuracy,
+            and strategic decision-making. From demand planning to contract finalization, dmp covers every facet of
+            procurement with precision and intelligence.</p>
+
+        <div class="grid">
+            <a class="card" href="demand_planning/" data-mod="dp">
+                <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/><polyline points="7.2 7.6 7.8 8.2 8.8 7.2" stroke-width="1.6"/></svg></div>
+                <h2>Demand Planning</h2>
+                <p>Navigate Your Hierarchy with Ease and Precision</p>
+                <span class="go">Go to <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></span>
+            </a>
+            <a class="card" href="sourcing/" data-mod="sourcing">
+                <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+                <h2>Sourcing</h2>
+                <p>From RFx to Award — Sealed Bids, Dual-Envelope Evaluation and Negotiations</p>
+                <span class="go">Go to <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></span>
+            </a>
+            <a class="card" href="sourcing/bid-eval.html" data-mod="bideval">
+                <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div>
+                <h2>Bid Evaluation - Material</h2>
+                <p>Accelerate your material evaluations with smart, data-driven tool for optimal decision-making</p>
+                <span class="go">Go to <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></span>
+            </a>
+            <div class="card soon">
+                <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                <h2>Benchmarking</h2>
+                <p>Learn From the Past and Real Market Data for Smarter Decisions</p>
+                <span class="go">Coming soon</span>
+            </div>
+            <div class="card soon">
+                <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 15.5c1.5-1.2 2.5.8 4 0s2.5.8 4-.4" stroke-width="1.7"/></svg></div>
+                <h2>Contract</h2>
+                <p>A Collaborative Approach to Price Agreement</p>
+                <span class="go">Coming soon</span>
+            </div>
+        </div>
+    </div>
+    <script>
+    // One landing file for every environment. Served at /main by the dev servers
+    // (ports 8123/8124) the links become absolute localhost URLs; served as the
+    // static site root (GitHub Pages) they stay relative folder paths.
+    (function () {
+        var dev = location.port === '8123' || location.port === '8124';
+        var T = dev
+            ? { dp: 'http://127.0.0.1:8123/', 'dp-cart': 'http://127.0.0.1:8123/#/cart',
+                sourcing: 'http://127.0.0.1:8124/', bideval: 'http://127.0.0.1:8124/bid-eval.html' }
+            : { dp: 'demand_planning/', 'dp-cart': 'demand_planning/#/cart',
+                sourcing: 'sourcing/', bideval: 'sourcing/bid-eval.html' };
+        document.querySelectorAll('[data-mod]').forEach(function (a) { a.href = T[a.getAttribute('data-mod')]; });
+        var assetBase = dev ? 'http://127.0.0.1:8123/img/' : 'demand_planning/img/';
+        document.querySelectorAll('[data-asset]').forEach(function (el) {
+            var f = el.getAttribute('data-asset') === 'logo' ? 'logo.svg' : 'favicon.svg';
+            if (el.tagName === 'IMG') el.src = assetBase + f; else el.href = assetBase + f;
+        });
+        if (dev) { var lg = document.querySelector('.logo'); if (lg) lg.href = '/main'; }
+    })();
+    </script>
+</body>
+</html>
