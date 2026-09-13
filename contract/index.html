@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMP — Contract</title>
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=1">
+</head>
+<body>
+    <header class="header" id="app-header"><!-- rendered by UI.renderHeader() --></header>
+
+    <div id="notif-panel" class="notif-panel"></div>
+    <div id="drawer-root"></div>
+
+    <div id="view"><!-- rendered by Router --></div>
+
+    <div id="modal-root"></div>
+    <div id="toast-root" class="toast-wrap"></div>
+
+    <!-- Data + Storage -->
+    <script src="js/seed.js?v=1"></script>
+    <script src="js/state-snapshot.js?v=1"></script>
+    <script src="js/store.js?v=1"></script>
+    <script src="js/workflow.js?v=1"></script>
+
+    <!-- UI Chrome & Modals -->
+    <script src="js/components.js?v=1"></script>
+
+    <!-- Views -->
+    <script src="js/views/contracts-list.js?v=1"></script>
+    <script src="js/views/contract-detail.js?v=1"></script>
+    <script src="js/views/contract-form.js?v=1"></script>
+    <script src="js/views/pricebook-detail.js?v=1"></script>
+    <script src="js/views/ctr-requests.js?v=1"></script>
+    <script src="js/views/spm-suppliers.js?v=1"></script>
+
+    <!-- Routing & App Bootstrap -->
+    <script src="js/router.js?v=1"></script>
+    <script src="js/app.js?v=1"></script>
+</body>
+</html>

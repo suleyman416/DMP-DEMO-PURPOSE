@@ -287,9 +287,11 @@
         const link = (hash, icon, label) => `<div class="drawer-link" data-go="${hash}">${icon}<span>${esc(label)}</span></div>`;
         const extLink = (url, icon, label) => `<div class="drawer-link" data-href="${esc(url)}">${icon}<span>${esc(label)}</span></div>`;
         const DP_URL = window.DP_URL || 'http://127.0.0.1:8123';
+        const CTR_URL = window.CTR_URL || 'http://127.0.0.1:8125';
         const ic2 = {
             chart: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
-            bag: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`
+            bag: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+            doc: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`
         };
         root.innerHTML = `
             <div class="drawer-backdrop" data-close="1"></div>
@@ -305,7 +307,8 @@
                 ${isCust ? `
                 <div class="drawer-section">Modules</div>
                 ${extLink(DP_URL, ic2.chart, 'Demand Planning')}
-                <div class="drawer-link drawer-link-active">${ic2.bag}<span>Sourcing</span></div>` : ''}
+                <div class="drawer-link drawer-link-active">${ic2.bag}<span>Sourcing</span></div>
+                ${extLink(CTR_URL, ic2.doc, 'Contract')}` : ''}
                 <div class="drawer-foot">Acting as <strong>${esc(me.role)}</strong> · ${esc(me.name)}</div>
             </aside>`;
         const close = () => { root.innerHTML = ''; };

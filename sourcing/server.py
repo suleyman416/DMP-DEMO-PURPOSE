@@ -171,26 +171,28 @@ class Handler(SimpleHTTPRequestHandler):
         pass
 
 
-# ---- companion module: Demand Planning ------------------------------------
-# One command runs the whole demo: if the sibling dp_pro folder exists and
-# port 8123 is free, its server is spawned as a child process (and stopped
-# again when this server exits).
-DP_DIR = os.path.join(os.path.dirname(ROOT), "dp_pro")
+# ---- companion modules: Demand Planning (:8123) & Contract (:8125) --------
+DP_DIR = os.path.join(os.path.dirname(ROOT), "demand_planning")
+if not os.path.exists(DP_DIR):
+    DP_DIR = os.path.join(os.path.dirname(ROOT), "dp_pro")
 DP_PORT = 8123
 
+CTR_DIR = os.path.join(os.path.dirname(ROOT), "contract")
+CTR_PORT = 8125
 
-def _start_demand_planning():
+
+def _start_companion(name, directory, port):
     import socket
     import atexit
     import subprocess
-    dp_server = os.path.join(DP_DIR, "server.py")
-    if not os.path.exists(dp_server):
+    srv = os.path.join(directory, "server.py")
+    if not os.path.exists(srv):
         return
     s = socket.socket()
     try:
         s.settimeout(0.5)
-        s.connect(("127.0.0.1", DP_PORT))
-        print("Demand Planning already running on http://127.0.0.1:%d" % DP_PORT)
+        s.connect(("127.0.0.1", port))
+        print(f"{name} already running on http://127.0.0.1:{port}")
         return
     except Exception:
         pass
@@ -200,15 +202,16 @@ def _start_demand_planning():
         except Exception:
             pass
     try:
-        proc = subprocess.Popen([sys.executable, dp_server, str(DP_PORT)],
+        proc = subprocess.Popen([sys.executable, srv, str(port)],
                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         atexit.register(proc.terminate)
-        print("Demand Planning started on http://127.0.0.1:%d (pid %d)" % (DP_PORT, proc.pid))
+        print(f"{name} started on http://127.0.0.1:{port} (pid {proc.pid})")
     except Exception as e:
-        print("Could not start Demand Planning: %s" % e)
+        print(f"Could not start {name}: {e}")
 
 
-_start_demand_planning()
+_start_companion("Demand Planning", DP_DIR, DP_PORT)
+_start_companion("Contract", CTR_DIR, CTR_PORT)
 
 httpd = ThreadingHTTPServer(("127.0.0.1", PORT), functools.partial(Handler))
 print("Sourcing demo on http://127.0.0.1:%d (root=%s, state=%s)" % (PORT, ROOT, STATE_FILE))
