@@ -29,10 +29,10 @@ window.ContractDetailView = (function () {
         const contractNum = contract.contract_number || contract.id.replace(/^[A-Za-z]+-/, "");
 
         root.innerHTML = `
-            ${window.UI.breadcrumb("Contract management", "Contract # " + contractNum)}
+            ${window.UI.breadcrumb("Contracts", "Contracts")}
             <div class="flex-column h-full page-viewport pageWrapper-iFXGCW" style="padding: 16px 28px; width: 100%;">
                 <div>
-                    <!-- 3-Column Metadata Hero matching 03_contract_detail.png -->
+                    <!-- 3-Column Metadata Hero matching demov2 -->
                     <div>
                         <div class="verticalExtraSection-KdA1Jm" id="contract-metadata-section" style="${isHeroCollapsed ? 'display:none;' : 'display:block;'}">
                             <div>
@@ -40,17 +40,18 @@ window.ContractDetailView = (function () {
                                     <div class="container-ypalLs w-full">
                                         <ul>
                                             <li>
-                                                <span class="itemLabel-sCP6mE">Supplier name:</span>
-                                                <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${window.UI.esc(contract.supplier)}</span></span>
+                                                <span class="itemLabel-sCP6mE">${isCust ? "Supplier name:" : "Customer name:"}</span>
+                                                <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${window.UI.esc(isCust ? contract.supplier : (contract.customer || "Delta Drilling LTD."))}</span></span>
                                             </li>
                                             <li>
                                                 <span class="itemLabel-sCP6mE">Contract description:</span>
                                                 <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${window.UI.esc(contract.description)}</span></span>
                                             </li>
+                                            ${isCust ? `
                                             <li>
                                                 <span class="itemLabel-sCP6mE">Contract approved value:</span>
                                                 <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${contract.approved_value ? contract.approved_value.toLocaleString() : "18990"}</span></span>
-                                            </li>
+                                            </li>` : ""}
                                             <li>
                                                 <span class="itemLabel-sCP6mE">Customer ID:</span>
                                                 <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${contract.customer_id || "5"}</span></span>
@@ -98,7 +99,8 @@ window.ContractDetailView = (function () {
                     </div>
                 </div>
 
-                <!-- 5 Connected Segmented Tabs matching 03_contract_detail.png -->
+                ${isCust ? `
+                <!-- 5 Connected Segmented Tabs for Customer -->
                 <div class="tabsWrapper-NSSGrZ">
                     <div>
                         <div class="tabs-Ugdckk tabsContainer-QAZ9xC">
@@ -119,6 +121,12 @@ window.ContractDetailView = (function () {
                         ${activeTab === "dashboards" ? renderDashboardsTab(contract, pricebooks, kpis, reports) : ""}
                     </div>
                 </div>
+                ` : `
+                <!-- Supplier View: Direct Pricebooks table without tabs header -->
+                <div class="tabContent-kOFLBy tabContent-n_Wx8b" style="margin-top: 16px;">
+                    ${renderPricebookTab(contract, pricebooks, isCust)}
+                </div>
+                `}
             </div>
         `;
 
@@ -235,7 +243,7 @@ window.ContractDetailView = (function () {
                                 ${!isCust ? `
                                 <div>
                                     <button class="inline-flex-center button-z6sbMq solid-qA3WwL primary-wQbOYq" data-act="create-pricebook" style="height: 40px; padding: 0 16px;">
-                                        <span class="flex-align-center label-FlMxDR">+ Add new pricebook</span>
+                                        <span class="flex-align-center label-FlMxDR">Create pricebook</span>
                                     </button>
                                 </div>
                                 ` : ""}
@@ -258,7 +266,7 @@ window.ContractDetailView = (function () {
                                     </thead>
                                     <tbody>
                                         ${filteredPbs.length === 0 ? `
-                                            <tr><td colspan="9" style="text-align:center;padding:36px;color:#6B7280;">No pricebooks attached to this contract.</td></tr>
+                                            <tr><td colspan="9" style="text-align:center;padding:40px 20px;background:#fff;">${window.UI.emptyFolder("No pricebooks have been created yet.")}</td></tr>
                                         ` : filteredPbs.map((pb, idx) => {
                                             const pbNum = pb.pricebook_number ? pb.pricebook_number.replace(/^[A-Za-z]+-/, "") : (idx + 1);
                                             return `
@@ -817,7 +825,7 @@ window.ContractDetailView = (function () {
 
         // Action Handlers
         window.UI.bindActions(root, {
-            "create-pricebook": () => openCreatePricebookModal(contract, () => render(root, contractId, "pricebook")),
+            "create-pricebook": () => window.UI.openPricebookModal({ contract, onSuccess: () => render(root, contractId, "pricebook") }),
             "create-kpi": () => openCreateKPIModal(contract, () => render(root, contractId, "kpi")),
             "create-report": () => openCreateReportModal(contract, () => render(root, contractId, "performance")),
             "edit-kpi-cell": (t) => {

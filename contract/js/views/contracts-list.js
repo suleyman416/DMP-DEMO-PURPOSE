@@ -24,6 +24,7 @@ window.ContractsListView = (function () {
         allContracts = window.ContractWorkflow.filterContractsForUser(allContracts, me);
 
         const suppliersList = Array.from(new Set(allContracts.map(c => c.supplier).filter(Boolean)));
+        const customersList = Array.from(new Set(allContracts.map(c => c.customer).filter(Boolean)));
         const ownersList = Array.from(new Set(allContracts.map(c => c.procurement_contract_owner).filter(Boolean)));
         const camList = Array.from(new Set(allContracts.map(c => c.cam_name).filter(Boolean)));
 
@@ -31,6 +32,7 @@ window.ContractsListView = (function () {
             filterState.search ||
             filterState.statuses.size > 0 ||
             filterState.supplier ||
+            filterState.customer ||
             filterState.owner ||
             filterState.cam ||
             filterState.validFrom ||
@@ -57,6 +59,9 @@ window.ContractsListView = (function () {
             if (filterState.supplier && c.supplier !== filterState.supplier) {
                 return false;
             }
+            if (filterState.customer && c.customer !== filterState.customer) {
+                return false;
+            }
             if (filterState.owner && c.procurement_contract_owner !== filterState.owner) {
                 return false;
             }
@@ -79,7 +84,7 @@ window.ContractsListView = (function () {
         const pageRows = filtered.slice(startIdx, startIdx + filterState.rowsPerPage);
 
         root.innerHTML = `
-            ${window.UI.breadcrumb("Contract management")}
+            ${window.UI.breadcrumb("Contracts", "Contracts")}
 
             <div class="rfx-layout">
                 <!-- Sidebar Filter Card -->
@@ -91,36 +96,44 @@ window.ContractsListView = (function () {
                     <aside class="filter-card">
                         <button class="fc-collapse" data-act="toggle-sidebar" title="Collapse filters">«</button>
                         <div class="fc-body">
-                            <div class="fc-label">Contract owner</div>
-                            <select class="form-select" data-filter="owner">
-                                <option value="">Select contract owner</option>
-                                ${ownersList.map(o => `<option value="${window.UI.esc(o)}" ${filterState.owner === o ? "selected" : ""}>${window.UI.esc(o)}</option>`).join("")}
-                            </select>
-
-                            ${isCust ? `
-                            <div class="fc-label">Supplier</div>
-                            <select class="form-select" data-filter="supplier">
-                                <option value="">Select supplier...</option>
-                                ${suppliersList.map(s => `<option value="${window.UI.esc(s)}" ${filterState.supplier === s ? "selected" : ""}>${window.UI.esc(s)}</option>`).join("")}
-                            </select>` : ""}
-
-                            <div class="fc-label">CAM name</div>
-                            <select class="form-select" data-filter="cam">
-                                <option value="">Select CAM name...</option>
-                                ${camList.map(c => `<option value="${window.UI.esc(c)}" ${filterState.cam === c ? "selected" : ""}>${window.UI.esc(c)}</option>`).join("")}
-                            </select>
-
-                            <div class="fc-label">Validity range</div>
-                            <div class="fc-date-row"><input type="date" class="form-input" data-filter="validFrom" value="${window.UI.esc(filterState.validFrom)}" placeholder="YYYY-MM-DD"></div>
-                            <div class="fc-date-row"><input type="date" class="form-input" data-filter="validTo" value="${window.UI.esc(filterState.validTo)}" placeholder="YYYY-MM-DD"></div>
-
                             <div class="fc-label">Status</div>
-                            ${["Active", "Upcoming", "Expired"].map(st => `
+                            ${["Active", "Expired", "Upcoming"].map(st => `
                                 <label class="fc-check">
                                     <input type="checkbox" value="${st}" data-filter="status" ${filterState.statuses.has(st) ? "checked" : ""}>
                                     ${st}
                                 </label>
                             `).join("")}
+
+                            ${isCust ? `
+                            <div class="fc-label">Supplier Name</div>
+                            <select class="form-select" data-filter="supplier">
+                                <option value="">Select...</option>
+                                ${suppliersList.map(s => `<option value="${window.UI.esc(s)}" ${filterState.supplier === s ? "selected" : ""}>${window.UI.esc(s)}</option>`).join("")}
+                            </select>
+
+                            <div class="fc-label">Contract Owner</div>
+                            <select class="form-select" data-filter="owner">
+                                <option value="">Select...</option>
+                                ${ownersList.map(o => `<option value="${window.UI.esc(o)}" ${filterState.owner === o ? "selected" : ""}>${window.UI.esc(o)}</option>`).join("")}
+                            </select>
+
+                            <div class="fc-label">CAM Name</div>
+                            <select class="form-select" data-filter="cam">
+                                <option value="">Select...</option>
+                                ${camList.map(c => `<option value="${window.UI.esc(c)}" ${filterState.cam === c ? "selected" : ""}>${window.UI.esc(c)}</option>`).join("")}
+                            </select>
+                            ` : `
+                            <div class="fc-label">Customer Name</div>
+                            <select class="form-select" data-filter="customer">
+                                <option value="">Select...</option>
+                                ${customersList.map(cust => `<option value="${window.UI.esc(cust)}" ${filterState.customer === cust ? "selected" : ""}>${window.UI.esc(cust)}</option>`).join("")}
+                            </select>
+                            `}
+
+                            <div class="fc-label">Valid From</div>
+                            <div class="fc-date-row"><input type="date" class="form-input" data-filter="validFrom" value="${window.UI.esc(filterState.validFrom)}" placeholder="YYYY-MM-DD"></div>
+                            <div class="fc-label" style="margin-top:8px;">Valid To</div>
+                            <div class="fc-date-row"><input type="date" class="form-input" data-filter="validTo" value="${window.UI.esc(filterState.validTo)}" placeholder="YYYY-MM-DD"></div>
                         </div>
                         <div class="fc-clear" data-act="clear-all-filters" style="${hasFilters ? "opacity:1;cursor:pointer;" : "opacity:0.5;pointer-events:none;"}">Clear All Filters</div>
                     </aside>
@@ -131,7 +144,7 @@ window.ContractsListView = (function () {
                     <div class="rfx-toolbar">
                         <div class="rfx-search">
                             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                            <input placeholder="Search contracts by number, description, or owner" data-filter="search" value="${window.UI.esc(filterState.search)}" id="search-here-input">
+                            <input placeholder="Search here" data-filter="search" value="${window.UI.esc(filterState.search)}" id="search-here-input">
                         </div>
                         ${isCust ? `
                             <button class="btn-create" data-act="create-contract">+ Add new contract</button>
@@ -144,13 +157,12 @@ window.ContractsListView = (function () {
                                 <th>No</th>
                                 <th># of Pricebooks</th>
                                 <th>Contract Description</th>
-                                <th>Contract Owner</th>
-                                <th>${isCust ? "Supplier" : "Customer"}</th>
-                                <th>CAM Name</th>
-                                <th>External Contract #</th>
+                                ${isCust ? `<th>Contract owner name</th><th>Supplier</th>` : `<th>Contract type</th><th>Customer</th>`}
+                                <th>CAM name</th>
+                                <th>External contract #</th>
                                 <th>Region</th>
                                 <th>Department</th>
-                                <th>Valid To</th>
+                                <th>Valid to</th>
                                 <th>Status</th>
                                 <th></th>
                             </tr>
@@ -158,8 +170,8 @@ window.ContractsListView = (function () {
                         <tbody>
                             ${pageRows.length === 0 ? `
                                 <tr>
-                                    <td colspan="12" style="text-align:center;padding:50px 20px;color:#888;background:#fff;">
-                                        No contracts match the selected filter criteria.
+                                    <td colspan="12" style="text-align:center;padding:40px 20px;background:#fff;">
+                                        ${window.UI.emptyFolder(hasFilters ? "No contracts match the selected filter criteria." : "No contracts have been created yet.")}
                                     </td>
                                 </tr>
                             ` : pageRows.map((c, idx) => {
@@ -169,15 +181,20 @@ window.ContractsListView = (function () {
                                 else if (st.toLowerCase() === "upcoming") dotClass = "dot-open";
 
                                 return `
-                                    <tr data-act="open-ctr" data-id="${c.id}">
+                                    <tr data-act="open-ctr" data-id="${c.id}" style="cursor:pointer;">
                                         <td class="rt-no">${startIdx + idx + 1}</td>
                                         <td style="font-weight:600;text-align:center;">${c.pricebook_count || 1}</td>
                                         <td>
                                             <div class="rt-title">${window.UI.esc(c.description || "—")}</div>
                                             ${c.contract_number ? `<div class="rt-sub">Contract #${window.UI.esc(c.contract_number)}</div>` : ""}
                                         </td>
-                                        <td>${window.UI.esc(c.procurement_contract_owner || "—")}</td>
-                                        <td style="font-weight:600;">${window.UI.esc(isCust ? c.supplier : c.customer)}</td>
+                                        ${isCust ? `
+                                            <td>${window.UI.esc(c.procurement_contract_owner || "—")}</td>
+                                            <td style="font-weight:600;">${window.UI.esc(c.supplier || "—")}</td>
+                                        ` : `
+                                            <td>${window.UI.esc(c.contract_type || "Regular")}</td>
+                                            <td style="font-weight:600;">${window.UI.esc(c.customer || "Delta Drilling LTD.")}</td>
+                                        `}
                                         <td>${window.UI.esc(c.cam_name || "—")}</td>
                                         <td>${window.UI.esc(c.external_id || "—")}</td>
                                         <td>${window.UI.esc(c.region || "—")}</td>
@@ -233,6 +250,15 @@ window.ContractsListView = (function () {
                 render(root);
             });
         });
+
+        const custSel = root.querySelector("select[data-filter='customer']");
+        if (custSel) {
+            custSel.addEventListener("change", e => {
+                filterState.customer = e.target.value;
+                filterState.page = 1;
+                render(root);
+            });
+        }
 
         const supSel = root.querySelector("select[data-filter='supplier']");
         if (supSel) {
@@ -296,6 +322,7 @@ window.ContractsListView = (function () {
             "clear-all-filters": () => {
                 filterState.statuses = new Set();
                 filterState.supplier = "";
+                filterState.customer = "";
                 filterState.owner = "";
                 filterState.cam = "";
                 filterState.validFrom = "";

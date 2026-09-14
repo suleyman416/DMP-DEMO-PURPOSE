@@ -199,11 +199,80 @@
         set(s => (s.notifications || []).forEach(n => { n.read = true; }));
     }
 
+    function addContract(contractData) {
+        let newContract = null;
+        set(s => {
+            if (!s.contracts) s.contracts = [];
+            const num = s.contracts.length + 1;
+            const id = "CTR-2026-" + String(Math.floor(100 + Math.random() * 900));
+            newContract = Object.assign({
+                id: id,
+                contract_number: String(num),
+                pricebook_count: 0,
+                status: "Active",
+                spent_value: 0,
+                currency: "USD",
+                created_at: new Date().toISOString()
+            }, contractData);
+            s.contracts.unshift(newContract);
+            if (!s.notifications) s.notifications = [];
+            s.notifications.unshift({
+                id: uid("ntf"),
+                title: "New Contract Created",
+                body: `${newContract.description || "Contract"} (${newContract.id}) created.`,
+                contractId: newContract.id,
+                read: false,
+                ts: Date.now()
+            });
+        });
+        return newContract;
+    }
+
+    function addPricebook(pbData) {
+        let newPb = null;
+        set(s => {
+            if (!s.pricebooks) s.pricebooks = [];
+            const pbNum = "PB-" + String(Math.floor(10 + Math.random() * 90));
+            const id = "PB-" + uid("pb").toUpperCase();
+            newPb = Object.assign({
+                id: id,
+                pricebook_number: pbNum,
+                status: "Active",
+                items_count: 0,
+                created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            }, pbData);
+            s.pricebooks.unshift(newPb);
+
+            const c = (s.contracts || []).find(ctr => ctr.id === newPb.contract_id || (ctr.id && ctr.id.replace(/^[A-Za-z]+-/, "") === newPb.contract_id));
+            if (c) {
+                c.pricebook_count = (c.pricebook_count || 0) + 1;
+            }
+
+            if (!s.notifications) s.notifications = [];
+            s.notifications.unshift({
+                id: uid("ntf"),
+                title: "New Pricebook Created",
+                body: `Pricebook ${newPb.pricebook_number} created.`,
+                contractId: newPb.contract_id,
+                read: false,
+                ts: Date.now()
+            });
+        });
+        return newPb;
+    }
+
+    function updatePricebook(id, updates) {
+        set(s => {
+            const pb = (s.pricebooks || []).find(p => p.id === id || p.pricebook_number === id);
+            if (pb) Object.assign(pb, updates);
+        });
+    }
+
     window.Store = {
         init, get, set, reset, subscribe, uid,
         session, users, currentUser, setUser, setLang,
-        contracts, contractById,
-        pricebooks, pricebooksByContract, pricebookById,
+        contracts, contractById, addContract,
+        pricebooks, pricebooksByContract, pricebookById, addPricebook, updatePricebook,
         lineItems, lineItemsByPricebook, lineItemById,
         kpis, kpisByContract,
         performanceReports, performanceReportsByContract,

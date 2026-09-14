@@ -48,21 +48,24 @@ window.Router = (function () {
 
     function renderGlobalPricebooks(root) {
         const me = window.Store.currentUser();
+        const isCust = window.ContractWorkflow.isCustomer(me);
         const allPbs = window.Store.pricebooks();
         const pbs = window.ContractWorkflow.filterPricebooksForUser(allPbs, me, window.Store.contracts());
 
         root.innerHTML = `
-            ${window.UI.renderBreadcrumbs([
-                { label: "Contract", hash: "#/contracts" },
-                { label: "Global Pricebooks", hash: "#/pricebooks" }
-            ])}
+            ${window.UI.breadcrumb("Contracts", "Pricebooks")}
 
-            <div class="main-content" style="max-width: 1400px; margin: 0 auto;">
-                <div class="toolbar">
+            <div class="main-content" style="max-width: 1400px; margin: 0 auto; padding: 20px 28px;">
+                <div class="toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                     <div>
-                        <h1 style="font-size:22px;font-weight:800;color:var(--text-dark);">Global Pricebooks Directory</h1>
-                        <p style="color:var(--text-muted);font-size:13px;">Master pricebook agreements across all active vendor supply lines.</p>
+                        <h1 style="font-size:22px;font-weight:700;color:#111827;">Pricebooks</h1>
+                        <p style="color:#6B7280;font-size:13.5px;margin-top:2px;">Master pricebook agreements across active contracts.</p>
                     </div>
+                    ${!isCust ? `
+                    <button class="inline-flex-center button-z6sbMq solid-qA3WwL primary-wQbOYq" data-act="global-create-pb" style="height:38px; padding:0 18px; font-weight:600;">
+                        Create pricebook
+                    </button>
+                    ` : ""}
                 </div>
 
                 <div class="table-container">
@@ -81,7 +84,13 @@ window.Router = (function () {
                             </tr>
                         </thead>
                         <tbody>
-                            ${pbs.map(pb => `
+                            ${pbs.length === 0 ? `
+                                <tr>
+                                    <td colspan="9" style="text-align:center;padding:40px 20px;background:#fff;">
+                                        ${window.UI.emptyFolder("No pricebooks have been created yet.")}
+                                    </td>
+                                </tr>
+                            ` : pbs.map(pb => `
                                 <tr>
                                     <td><a href="#/contracts/${pb.contract_id}/pricebooks/${pb.id}" class="cell-link" style="font-weight:700;">${window.UI.esc(pb.pricebook_number)}</a></td>
                                     <td><span style="font-family:monospace;font-size:12px;">${window.UI.esc(pb.external_pricebook_number)}</span></td>
@@ -98,7 +107,19 @@ window.Router = (function () {
                     </table>
                 </div>
             </div>
+            ${window.UI.renderFeedbackBubble ? window.UI.renderFeedbackBubble() : ""}
         `;
+
+        window.UI.bindActions(root, {
+            "global-create-pb": () => {
+                const myContracts = window.Store.contracts().filter(c => c.supplier === me.company);
+                const firstCtr = myContracts[0] || window.Store.contracts()[0];
+                window.UI.openPricebookModal({
+                    contract: firstCtr,
+                    onSuccess: () => renderGlobalPricebooks(root)
+                });
+            }
+        });
     }
 
     function init() {

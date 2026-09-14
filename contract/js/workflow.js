@@ -4,11 +4,17 @@
 window.ContractWorkflow = (function () {
 
     function isCustomer(user) {
-        return user && (user.type === "customer" || user.role === "Procurement Specialist" || user.role === "Category Manager (CAM)");
+        if (!user) return true;
+        const r = (user.role || "").toLowerCase();
+        const t = (user.type || "").toLowerCase();
+        return t === "customer" || r.includes("customer") || r.includes("procurement") || r.includes("cam") || r.includes("admin") && !r.includes("supplier");
     }
 
     function isSupplier(user) {
-        return user && (user.type === "supplier" || user.role === "Vendor Admin" || user.role === "Key Account Manager" || user.role === "Sales Director" || user.role === "Commercial Manager");
+        if (!user) return false;
+        const r = (user.role || "").toLowerCase();
+        const t = (user.type || "").toLowerCase();
+        return t === "supplier" || r.includes("supplier") || r.includes("vendor");
     }
 
     function canCreateContract(user) {
