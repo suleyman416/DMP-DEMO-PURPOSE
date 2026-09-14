@@ -248,7 +248,7 @@ window.PricebookDetailView = (function () {
         const pbNum = pricebook.pricebook_number || "28";
 
         root.innerHTML = `
-            ${window.UI.breadcrumb("Contract management", "Contract # " + contractNum, "Pricebook # " + pbNum)}
+            ${window.UI.breadcrumb("Contracts", "Contract # " + contractNum, "Pricebook # " + pbNum)}
             <div class="flex-column h-full page-viewport pageWrapper-iFXGCW" style="padding: 16px 28px; width: 100%;">
                 <div>
                     <!-- 3-Column Metadata Hero matching 09_pricebook_items_detail.png -->
@@ -514,16 +514,6 @@ window.PricebookDetailView = (function () {
                                 </svg>
                                 <input type="text" class="inputSearch-HCZijN" id="item-search-input" placeholder="Search here" value="${window.UI.esc(filterSearch)}">
                             </div>
-
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-outline btn-sm" data-act="export-csv">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                    <span>Export CSV</span>
-                                </button>
-                                <button class="btn-black-add" data-act="add-item" style="padding: 6px 14px; font-size: 13px;">
-                                    <span>+ Add Item</span>
-                                </button>
-                            </div>
                         </div>
 
                         <!-- Main Items Content: List Mode (38-Column Table) or Grid Mode -->
@@ -538,38 +528,37 @@ window.PricebookDetailView = (function () {
                                             <th style="min-width: 100px;">Status</th>
                                             <th style="min-width: 140px;">Supplier Part #</th>
                                             <th style="min-width: 140px;">Material/Service #</th>
-                                            <th style="min-width: 130px;">Part # Extension</th>
-                                            <th style="min-width: 120px;">Product Type</th>
+                                            <th style="min-width: 120px;">Part # Extension</th>
+                                            <th style="min-width: 110px;">Product Type</th>
                                             <th style="min-width: 70px;">UOM</th>
-                                            <th style="min-width: 240px;">Customer Short Description</th>
-                                            <th style="min-width: 300px;">Customer Long Description</th>
+                                            <th style="min-width: 200px;">Customer Short Description</th>
+                                            <th style="min-width: 240px;">Customer Long Description</th>
                                             <th style="min-width: 240px;">Supplier Description</th>
                                             <th style="min-width: 140px;">Manufacturer Name</th>
                                             <th style="min-width: 140px;">Manufacturer Part #</th>
-                                            <th style="min-width: 100px; text-align: right;">Unit Price</th>
+                                            <th style="min-width: 100px; text-align: right;">Price</th>
                                             <th style="min-width: 80px;">Currency</th>
-                                            <th style="min-width: 120px;">Lead Time (Days)</th>
+                                            <th style="min-width: 90px;">Lead Time</th>
                                             <th style="min-width: 90px;">Incoterms</th>
                                             <th style="min-width: 160px;">Incoterms Location</th>
-                                            <th style="min-width: 100px;">UNSPSC Code</th>
+                                            <th style="min-width: 110px;">UNSPSC Code</th>
                                             <th style="min-width: 140px;">UNSPSC Title</th>
                                             <th style="min-width: 100px;">Valid From</th>
                                             <th style="min-width: 100px;">Valid To</th>
                                             <th style="min-width: 70px;">MOQ</th>
-                                            <th style="min-width: 90px;">Order Multiple</th>
+                                            <th style="min-width: 100px;">Order Multiple</th>
                                             <th style="min-width: 100px;">Price Validity</th>
                                             <th style="min-width: 120px;">Country of Origin</th>
-                                            <th style="min-width: 120px;">Customs Tariff HS</th>
+                                            <th style="min-width: 120px;">Customs Tariff #</th>
                                             <th style="min-width: 120px;">Hazardous Material</th>
-                                            <th style="min-width: 120px;">Shelf Life (Months)</th>
-                                            <th style="min-width: 120px;">Warranty (Months)</th>
+                                            <th style="min-width: 90px;">Shelf Life</th>
+                                            <th style="min-width: 90px;">Warranty</th>
                                             <th style="min-width: 90px;">Spec Sheet</th>
-                                            <th style="min-width: 80px;">SDS</th>
+                                            <th style="min-width: 70px;">SDS</th>
                                             <th style="min-width: 100px;">Discount Tier</th>
-                                            <th style="min-width: 120px;">Indexation Clause</th>
+                                            <th style="min-width: 100px;">Indexation</th>
                                             <th style="min-width: 100px;">Price Type</th>
                                             <th style="min-width: 100px;">Creation Date</th>
-                                            <th style="min-width: 50px; text-align: center;"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -638,13 +627,6 @@ window.PricebookDetailView = (function () {
                                                     <td>${window.UI.esc(it.indexation_clause || "Fixed")}</td>
                                                     <td>${window.UI.esc(it.price_type || "Firm Fixed")}</td>
                                                     <td>${it.created_date || "2026-04-27"}</td>
-                                                    <td style="text-align: center;">
-                                                        <button class="trigger-Z_D8XQ" data-act="item-actions" data-id="${it.id}">
-                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                                <circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
-                                                            </svg>
-                                                        </button>
-                                                    </td>
                                                 </tr>
                                             `;
                                         }).join("")}
@@ -966,94 +948,6 @@ window.PricebookDetailView = (function () {
                 const u = el.getAttribute("data-url");
                 window.UI.openPhotoModal(u || "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800");
             });
-        });
-
-        // Item Actions (3-dots menu)
-        root.querySelectorAll("[data-act='item-actions']").forEach(btn => {
-            btn.addEventListener("click", e => {
-                e.stopPropagation();
-                const id = btn.getAttribute("data-id");
-                const it = items.find(x => x.id === id);
-                if (!it) return;
-
-                const me = window.Store.currentUser();
-                const isCust = window.ContractWorkflow.isCustomer(me);
-                const currentStatus = (it.status || "").toLowerCase();
-                const isApproved = currentStatus === "approved";
-
-                window.UI.showActionMenu(btn, [
-                    {
-                        label: isApproved ? "Disable item" : "Approve item",
-                        icon: isApproved ? "🚫" : "✅",
-                        danger: isApproved,
-                        onClick: () => {
-                            window.Store.set(s => {
-                                const target = (s.line_items || []).find(x => x.id === id);
-                                if (target) {
-                                    target.status = isApproved ? "Disabled" : "Approved";
-                                }
-                            });
-                            window.UI.toast({ kind: "success", title: "Item Status Updated", body: `Item set to ${isApproved ? "Disabled" : "Approved"}.` });
-                            rerender();
-                        }
-                    },
-                    {
-                        label: "Request CTR price revision",
-                        icon: "📝",
-                        onClick: () => {
-                            const newPrice = prompt(`Enter new requested unit price (Current: $${it.unit_price}):`, it.unit_price);
-                            if (newPrice && !isNaN(parseFloat(newPrice))) {
-                                const np = parseFloat(newPrice);
-                                window.Store.set(s => {
-                                    if (!s.ctr_requests) s.ctr_requests = [];
-                                    s.ctr_requests.push({
-                                        id: "CTR-REQ-" + Date.now().toString(36).toUpperCase(),
-                                        contract_id: contract ? contract.id : pricebook.contract_id,
-                                        pricebook_id: pricebook.id,
-                                        item_id: it.id,
-                                        item_desc: it.customer_short_description,
-                                        supplier: contract ? contract.supplier : me.company,
-                                        request_type: "Price Revision Request",
-                                        requested_by: me.name,
-                                        current_price: it.unit_price,
-                                        requested_price: np,
-                                        currency: it.currency || pricebook.currency || "USD",
-                                        justification: "Submitted via Pricebook Item portal.",
-                                        status: "Pending Review",
-                                        created_at: new Date().toISOString().slice(0, 10)
-                                    });
-                                });
-                                window.UI.toast({ kind: "success", title: "CTR Request Submitted", body: "Submitted price revision request to procurement." });
-                            }
-                        }
-                    },
-                    {
-                        label: "View technical datasheet",
-                        icon: "📑",
-                        onClick: () => {
-                            window.UI.toast({ kind: "info", title: "Datasheet", body: `Viewing technical datasheet for Part #${it.supplier_part_no}` });
-                        }
-                    },
-                    {
-                        label: "Copy part number",
-                        icon: "📋",
-                        onClick: () => {
-                            navigator.clipboard?.writeText(it.supplier_part_no);
-                            window.UI.toast({ kind: "success", title: "Copied", body: `Part number ${it.supplier_part_no} copied to clipboard.` });
-                        }
-                    }
-                ]);
-            });
-        });
-
-        // Global actions (Export CSV, Add Item)
-        window.UI.bindActions(root, {
-            "export-csv": () => {
-                exportItemsCSV(items, pricebook.pricebook_number || "pricebook");
-            },
-            "add-item": () => {
-                openAddItemModal(pricebook, contract, rerender);
-            }
         });
     }
 

@@ -74,7 +74,7 @@ window.CTRRequestsView = (function () {
         const pageRows = filtered.slice(startIdx, startIdx + filterState.rowsPerPage);
 
         root.innerHTML = `
-            ${window.UI.breadcrumb("CTR requests", "CTR requests")}
+            ${window.UI.breadcrumb("CTR requests")}
 
             <div class="rfx-layout" style="padding: 16px 28px;">
                 <!-- Filter Sidebar matching demov2 -->
@@ -116,18 +116,10 @@ window.CTRRequestsView = (function () {
                             </select>
 
                             <div class="fc-label">Status</div>
-                            ${["Active", "Expired", "Upcoming"].map(st => `
-                                <label class="fc-check">
-                                    <input type="checkbox" value="${st}" data-filter="status" ${filterState.statuses.has(st) ? "checked" : ""}>
-                                    ${st}
-                                </label>
-                            `).join("")}
-
-                            ${isCust ? `
-                            <div class="fc-label">Validity range</div>
-                            <div class="fc-date-row"><input type="date" class="form-input" data-filter="validFrom" value="${window.UI.esc(filterState.validFrom)}" placeholder="YYYY-MM-DD"></div>
-                            <div class="fc-date-row"><input type="date" class="form-input" data-filter="validTo" value="${window.UI.esc(filterState.validTo)}" placeholder="YYYY-MM-DD"></div>
-                            ` : ""}
+                            <label class="fc-check">
+                                <input type="checkbox" value="Expired" data-filter="status" ${filterState.statuses.has("Expired") ? "checked" : ""}>
+                                Expired
+                            </label>
                         </div>
                         <div class="fc-clear" data-act="clear-all-filters" style="${hasFilters ? "opacity:1;cursor:pointer;" : "opacity:0.5;pointer-events:none;"}">Clear All Filters</div>
                     </aside>
@@ -337,45 +329,17 @@ window.CTRRequestsView = (function () {
             },
             "ctr-req-options": (t) => {
                 const id = t.getAttribute("data-id");
-                const r = (window.Store.get().ctr_requests || []).find(x => x.id === id);
                 window.UI.showActionMenu(t, [
                     {
-                        label: "View request spec",
-                        icon: "📄",
+                        label: "Download request",
                         onClick: () => {
-                            window.UI.toast({ kind: "info", title: "CTR Request", body: `Viewing request specification for ${id}` });
+                            window.UI.toast({ kind: "success", title: "Download Started", body: `Downloading request #${id}...` });
                         }
                     },
                     {
-                        label: "Approve change request",
-                        icon: "✅",
+                        label: "Export items",
                         onClick: () => {
-                            window.Store.set(s => {
-                                const target = (s.ctr_requests || []).find(x => x.id === id);
-                                if (target) target.status = "Approved";
-                            });
-                            window.UI.toast({ kind: "success", title: "Status Updated", body: `Request ${id} approved.` });
-                            render(root);
-                        }
-                    },
-                    {
-                        label: "Reject request",
-                        icon: "🚫",
-                        danger: true,
-                        onClick: () => {
-                            window.Store.set(s => {
-                                const target = (s.ctr_requests || []).find(x => x.id === id);
-                                if (target) target.status = "Rejected";
-                            });
-                            window.UI.toast({ kind: "info", title: "Status Updated", body: `Request ${id} rejected.` });
-                            render(root);
-                        }
-                    },
-                    {
-                        label: "Download CTR PDF",
-                        icon: "📥",
-                        onClick: () => {
-                            window.UI.toast({ kind: "success", title: "Download Started", body: `Downloading specification PDF for ${id}...` });
+                            window.UI.toast({ kind: "success", title: "Export Started", body: `Exporting items for request #${id}...` });
                         }
                     }
                 ]);

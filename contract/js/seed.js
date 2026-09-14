@@ -808,36 +808,64 @@ window.ContractSeed = (function () {
 
     const ctr_requests = [
         {
-            id: "CTR-REQ-2026-01",
-            contract_id: "CTR-2026-001",
-            pricebook_id: "PB-2026-001-A",
-            item_id: "itm_001",
-            item_desc: "BEARING,BALL:6307-2RS1",
-            supplier: "Baku Industrial Supplies LLC",
-            request_type: "Price Indexation Adjustment",
-            requested_by: "Rashad Aliyev",
-            current_price: 185.00,
-            requested_price: 198.50,
-            currency: "USD",
-            justification: "Clause 14.2 steel raw commodity price adjustment based on Q2 LME Producer Price Index.",
-            status: "Pending Review",
-            created_at: "2026-09-02"
+            id: "CTR-REQ-1",
+            project_name: "test ctr",
+            contract_id: "26",
+            pricebook_id: "28",
+            supplier: "MRO AISEL",
+            customer: "Delta Drilling LTD.",
+            required_action_by: "no_action_required",
+            submission_deadline: "25-05-2026",
+            status: "Expired",
+            created_at: "25-05-2026"
         },
         {
-            id: "CTR-REQ-2026-02",
-            contract_id: "CTR-2026-001",
-            pricebook_id: "PB-2026-001-A",
-            item_id: "itm_004",
-            item_desc: "COUPLING,ELASTOMER:FALK WRAPFLEX 1040G",
-            supplier: "Baku Industrial Supplies LLC",
-            request_type: "Catalogue Specification Update",
-            requested_by: "Rashad Aliyev",
-            current_price: 340.00,
-            requested_price: 340.00,
-            currency: "USD",
-            justification: "Updated OEM manufacturer part number to 1040G-EL High Temp elastomer variant.",
-            status: "Approved",
-            created_at: "2026-08-18"
+            id: "CTR-REQ-2",
+            project_name: "test ctr",
+            contract_id: "26",
+            pricebook_id: "28",
+            supplier: "MRO AISEL",
+            customer: "Delta Drilling LTD.",
+            required_action_by: "no_action_required",
+            submission_deadline: "30-04-2026",
+            status: "Expired",
+            created_at: "29-04-2026"
+        },
+        {
+            id: "CTR-REQ-3",
+            project_name: "test ctr",
+            contract_id: "26",
+            pricebook_id: "28",
+            supplier: "MRO AISEL",
+            customer: "Delta Drilling LTD.",
+            required_action_by: "no_action_required",
+            submission_deadline: "27-04-2026",
+            status: "Expired",
+            created_at: "27-04-2026"
+        },
+        {
+            id: "CTR-REQ-4",
+            project_name: "aaa",
+            contract_id: "26",
+            pricebook_id: "28",
+            supplier: "DSC (demo supplier company)",
+            customer: "Delta Drilling LTD.",
+            required_action_by: "no_action_required",
+            submission_deadline: "26-03-2026",
+            status: "Expired",
+            created_at: "26-03-2026"
+        },
+        {
+            id: "CTR-REQ-5",
+            project_name: "Test",
+            contract_id: "26",
+            pricebook_id: "28",
+            supplier: "DSC (demo supplier company)",
+            customer: "Delta Drilling LTD.",
+            required_action_by: "no_action_required",
+            submission_deadline: "16-03-2026",
+            status: "Expired",
+            created_at: "16-03-2026"
         }
     ];
 

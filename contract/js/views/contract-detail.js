@@ -29,7 +29,7 @@ window.ContractDetailView = (function () {
         const contractNum = contract.contract_number || contract.id.replace(/^[A-Za-z]+-/, "");
 
         root.innerHTML = `
-            ${window.UI.breadcrumb("Contracts", "Contracts")}
+            ${window.UI.breadcrumb("Contracts", `Contract # ${contractNum}`)}
             <div class="flex-column h-full page-viewport pageWrapper-iFXGCW" style="padding: 16px 28px; width: 100%;">
                 <div>
                     <!-- 3-Column Metadata Hero matching demov2 -->
@@ -51,11 +51,15 @@ window.ContractDetailView = (function () {
                                             <li>
                                                 <span class="itemLabel-sCP6mE">Contract approved value:</span>
                                                 <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${contract.approved_value ? contract.approved_value.toLocaleString() : "18990"}</span></span>
-                                            </li>` : ""}
+                                            </li>
                                             <li>
                                                 <span class="itemLabel-sCP6mE">Customer ID:</span>
                                                 <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${contract.customer_id || "5"}</span></span>
-                                            </li>
+                                            </li>` : `
+                                            <li>
+                                                <span class="itemLabel-sCP6mE">Supplier ID:</span>
+                                                <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${contract.supplier_id || "7"}</span></span>
+                                            </li>`}
                                             <li>
                                                 <span class="itemLabel-sCP6mE">External contract #</span>
                                                 <span class="root-Vr2pV6"><span class="itemValue-D2N7I4">${window.UI.esc(contract.external_id || "123123123")}</span></span>
@@ -261,16 +265,15 @@ window.ContractDetailView = (function () {
                                             <th style="min-width: 180px; width: 180px;">External pricebook number</th>
                                             <th>Currency</th>
                                             <th style="min-width: 250px; width: 250px;">Creation date and time</th>
-                                            <th style="min-width: 50px; width: 50px;"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         ${filteredPbs.length === 0 ? `
-                                            <tr><td colspan="9" style="text-align:center;padding:40px 20px;background:#fff;">${window.UI.emptyFolder("No pricebooks have been created yet.")}</td></tr>
+                                            <tr><td colspan="8" style="text-align:center;padding:40px 20px;background:#fff;">${window.UI.emptyFolder("No pricebooks have been created yet.")}</td></tr>
                                         ` : filteredPbs.map((pb, idx) => {
                                             const pbNum = pb.pricebook_number ? pb.pricebook_number.replace(/^[A-Za-z]+-/, "") : (idx + 1);
                                             return `
-                                                <tr>
+                                                <tr data-act="open-pb" data-cid="${contract.id}" data-pbid="${pb.id}" style="cursor: pointer;">
                                                     <td style="min-width: 60px; width: 60px;">${idx + 1}</td>
                                                     <td style="min-width: 120px; width: 120px;">
                                                         <a href="#/contracts/${contract.id}/pricebooks/${pb.id}" class="link-h7l698" style="font-weight: 600; color: #111827;">
@@ -298,17 +301,6 @@ window.ContractDetailView = (function () {
                                                     </td>
                                                     <td style="min-width: 120px;">${pb.currency || "USD"}</td>
                                                     <td style="min-width: 250px; width: 250px;">${pb.created_at ? (pb.created_at.includes(" ") ? pb.created_at : `${pb.created_at} 07:00:37`) : "2026-04-27 07:00:37"}</td>
-                                                    <td style="min-width: 50px; width: 50px;">
-                                                        <div class="actionMenu-wrap" style="position:relative;">
-                                                            <button class="inline-flex-center button-z6sbMq link-xtI0I7 primary-wQbOYq" data-act="pb-menu-toggle" data-id="${pb.id}" aria-label="More options">
-                                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="#121212">
-                                                                    <circle cx="8" cy="8" r="1.33" fill="#121212"/>
-                                                                    <circle cx="8" cy="3.33" r="1.33" fill="#121212"/>
-                                                                    <circle cx="8" cy="12.66" r="1.33" fill="#121212"/>
-                                                                </svg>
-                                                            </button>
-                                                        </div>
-                                                    </td>
                                                 </tr>
                                             `;
                                         }).join("")}
@@ -795,10 +787,10 @@ window.ContractDetailView = (function () {
                 );
                 if (tbody) {
                     if (filtered.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:36px;color:#6B7280;">No pricebooks match your search.</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:36px;color:#6B7280;">No pricebooks match your search.</td></tr>`;
                     } else {
                         tbody.innerHTML = filtered.map((pb, idx) => `
-                            <tr>
+                            <tr data-act="open-pb" data-cid="${contract.id}" data-pbid="${pb.id}" style="cursor: pointer;">
                                 <td style="min-width: 60px; width: 60px;">${idx + 1}</td>
                                 <td style="min-width: 120px; width: 120px;">
                                     <a href="#/contracts/${contract.id}/pricebooks/${pb.id}" class="link-h7l698" style="font-weight: 600; color: #111827;">${pb.pricebook_number.replace(/^[A-Za-z]+-/, "")}</a>
@@ -811,11 +803,6 @@ window.ContractDetailView = (function () {
                                 <td>${window.UI.esc(pb.external_pricebook_number || "1234512")}</td>
                                 <td>${pb.currency || "USD"}</td>
                                 <td>${pb.created_at ? `${pb.created_at} 07:00:37` : "2026-04-27 07:00:37"}</td>
-                                <td>
-                                    <button class="inline-flex-center button-z6sbMq link-xtI0I7 primary-wQbOYq" data-act="pb-menu-toggle" data-id="${pb.id}">
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="#121212"><circle cx="8" cy="8" r="1.33"/><circle cx="8" cy="3.33" r="1.33"/><circle cx="8" cy="12.66" r="1.33"/></svg>
-                                    </button>
-                                </td>
                             </tr>
                         `).join("");
                     }
@@ -827,48 +814,11 @@ window.ContractDetailView = (function () {
         window.UI.bindActions(root, {
             "create-pricebook": () => window.UI.openPricebookModal({ contract, onSuccess: () => render(root, contractId, "pricebook") }),
             "create-kpi": () => openCreateKPIModal(contract, () => render(root, contractId, "kpi")),
-            "create-report": () => openCreateReportModal(contract, () => render(root, contractId, "performance")),
-            "pb-menu-toggle": (t) => {
-                const pbId = t.getAttribute("data-id");
-                const pb = (window.Store.pricebooks() || []).find(p => p.id === pbId);
-                if (!pb) return;
-                const isAct = (pb.status || "Active") === "Active";
-                window.UI.showActionMenu(t, [
-                    {
-                        label: "View pricebook items",
-                        icon: "📄",
-                        onClick: () => { window.location.hash = `#/contracts/${contract.id}/pricebooks/${pb.id}`; }
-                    },
-                    {
-                        label: "Edit pricebook",
-                        icon: "✏️",
-                        onClick: () => {
-                            const newDesc = prompt("Update pricebook description:", pb.description);
-                            if (newDesc && newDesc.trim()) {
-                                window.Store.updatePricebook(pb.id, { description: newDesc.trim() });
-                                window.UI.toast({ kind: "success", title: "Pricebook Updated", body: "Description updated successfully." });
-                                render(root, contractId, activeTab);
-                            }
-                        }
-                    },
-                    {
-                        label: "Export items (CSV)",
-                        icon: "📥",
-                        onClick: () => {
-                            window.UI.toast({ kind: "success", title: "Export Started", body: `Exporting items for Pricebook #${pb.pricebook_number || pb.id}...` });
-                        }
-                    },
-                    {
-                        label: isAct ? "Disable pricebook" : "Activate pricebook",
-                        icon: isAct ? "🚫" : "✅",
-                        danger: isAct,
-                        onClick: () => {
-                            window.Store.updatePricebook(pb.id, { status: isAct ? "Disabled" : "Active" });
-                            window.UI.toast({ kind: "info", title: "Status Changed", body: `Pricebook is now ${isAct ? "Disabled" : "Active"}.` });
-                            render(root, contractId, activeTab);
-                        }
-                    }
-                ]);
+            "create-report": () => {},
+            "open-pb": (t) => {
+                const cid = t.getAttribute("data-cid");
+                const pbid = t.getAttribute("data-pbid");
+                window.location.hash = `#/contracts/${cid}/pricebooks/${pbid}`;
             },
             "edit-kpi-cell": (t) => {
                 const kpiId = t.getAttribute("data-kpi");

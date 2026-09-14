@@ -51,7 +51,7 @@ window.SPMSuppliersView = (function () {
         const pageRows = filtered.slice(startIdx, startIdx + filterState.rowsPerPage);
 
         root.innerHTML = `
-            ${window.UI.breadcrumb("Suppliers", "Suppliers")}
+            ${window.UI.breadcrumb("Suppliers")}
 
             <div class="rfx-layout" style="padding: 16px 28px;">
                 <!-- Filter Sidebar matching demov2 -->

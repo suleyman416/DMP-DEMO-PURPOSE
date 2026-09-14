@@ -84,7 +84,7 @@ window.ContractsListView = (function () {
         const pageRows = filtered.slice(startIdx, startIdx + filterState.rowsPerPage);
 
         root.innerHTML = `
-            ${window.UI.breadcrumb("Contracts", "Contracts")}
+            ${window.UI.breadcrumb("Contracts")}
 
             <div class="rfx-layout">
                 <!-- Sidebar Filter Card -->
@@ -130,9 +130,8 @@ window.ContractsListView = (function () {
                             </select>
                             `}
 
-                            <div class="fc-label">Valid From</div>
-                            <div class="fc-date-row"><input type="date" class="form-input" data-filter="validFrom" value="${window.UI.esc(filterState.validFrom)}" placeholder="YYYY-MM-DD"></div>
-                            <div class="fc-label" style="margin-top:8px;">Valid To</div>
+                            <div class="fc-label">Valid From/To</div>
+                            <div class="fc-date-row" style="margin-bottom:8px;"><input type="date" class="form-input" data-filter="validFrom" value="${window.UI.esc(filterState.validFrom)}" placeholder="YYYY-MM-DD"></div>
                             <div class="fc-date-row"><input type="date" class="form-input" data-filter="validTo" value="${window.UI.esc(filterState.validTo)}" placeholder="YYYY-MM-DD"></div>
                         </div>
                         <div class="fc-clear" data-act="clear-all-filters" style="${hasFilters ? "opacity:1;cursor:pointer;" : "opacity:0.5;pointer-events:none;"}">Clear All Filters</div>
@@ -164,7 +163,7 @@ window.ContractsListView = (function () {
                                 <th>Department</th>
                                 <th>Valid to</th>
                                 <th>Status</th>
-                                <th></th>
+                                ${isCust ? `<th></th>` : ""}
                             </tr>
                         </thead>
                         <tbody>
@@ -203,11 +202,13 @@ window.ContractsListView = (function () {
                                         <td>
                                             <span class="st-row"><span class="st-dot ${dotClass}"></span>${window.UI.esc(st)}</span>
                                         </td>
-                                        <td style="text-align:right;">
-                                            <button class="icon-btn" data-act="ctr-options" data-id="${c.id}" style="display:inline-flex;padding:6px;font-size:16px;" title="Actions">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-                                            </button>
-                                        </td>
+                                        ${isCust ? `
+                                            <td style="text-align:right;">
+                                                <button class="icon-btn" data-act="ctr-options" data-id="${c.id}" style="display:inline-flex;padding:6px;font-size:16px;" title="Actions">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                                                </button>
+                                            </td>
+                                        ` : ""}
                                     </tr>
                                 `;
                             }).join("")}
@@ -354,47 +355,14 @@ window.ContractsListView = (function () {
                 window.location.hash = "#/contracts/new";
             },
             "open-ctr": (t) => {
-                window.location.hash = "#/contracts/" + t.getAttribute("data-id");
+                window.location.hash = "#/contracts/" + t.getAttribute("data-id") + "/pricebooks";
             },
             "ctr-options": (t) => {
                 const id = t.getAttribute("data-id");
-                const c = (window.Store.contracts() || []).find(x => x.id === id);
-                if (!c) return;
-                const isAct = (c.status || "Active") === "Active";
                 window.UI.showActionMenu(t, [
                     {
-                        label: "View contract details",
-                        icon: "📄",
-                        onClick: () => { window.location.hash = "#/contracts/" + id; }
-                    },
-                    {
-                        label: "Download contract (PDF)",
-                        icon: "📥",
-                        onClick: () => {
-                            window.UI.toast({ kind: "success", title: "PDF Export", body: `Downloading signed agreement for Contract ${id}...` });
-                        }
-                    },
-                    {
-                        label: isAct ? "Deactivate contract" : "Activate contract",
-                        icon: isAct ? "🚫" : "✅",
-                        danger: isAct,
-                        onClick: () => {
-                            toggleContractStatus(id);
-                        }
-                    },
-                    {
-                        label: "Delete contract",
-                        icon: "🗑️",
-                        danger: true,
-                        onClick: () => {
-                            if (confirm(`Are you sure you want to delete Contract ${id}? This action cannot be undone.`)) {
-                                window.Store.set(s => {
-                                    s.contracts = (s.contracts || []).filter(x => x.id !== id);
-                                });
-                                window.UI.toast({ kind: "info", title: "Contract Removed", body: `Contract ${id} has been deleted.` });
-                                render(root);
-                            }
-                        }
+                        label: "Edit Contract",
+                        onClick: () => { window.location.hash = "#/contracts/edit/" + id; }
                     }
                 ]);
             }

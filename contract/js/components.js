@@ -152,50 +152,35 @@ window.UI = (function () {
                 <button class="menu-toggle" data-act="nav-drawer" data-testid="navigation-drawer-open-button" title="Menu">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                 </button>
-                <div class="logo-area" data-act="home">
+                <div class="logo-area" data-act="home" style="cursor:pointer;">
                     <img class="logo-img" src="img/logo.svg" alt="dmp — Digital Material Purchasing">
-                    <div class="divider"></div>
-                    <div class="app-title">CONTRACTS</div>
                 </div>
             </div>
             <div class="header-right">
-                <div class="lang-switcher">
-                    <button class="lang-switch-btn" data-act="lang-toggle" title="Language / Dil">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                        <span class="lang-label">${(s.lang || 'en').toUpperCase()}</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                    </button>
-                    <div class="lang-menu" id="lang-menu">
-                        <div class="lang-menu-item ${(s.lang || 'en') === 'en' ? 'active' : ''}" data-act="lang-pick" data-lang="en"><span>EN</span><span class="lang-name">English</span></div>
-                        <div class="lang-menu-item ${s.lang === 'az' ? 'active' : ''}" data-act="lang-pick" data-lang="az"><span>AZ</span><span class="lang-name">Azərbaycan dili</span></div>
-                    </div>
-                </div>
-                <div class="role-switcher">
-                    <button class="role-switcher-btn" data-act="user-toggle">
-                        <span class="role-dot"></span>
-                        <span>Acting as <span class="role-label">${esc(me.name)}</span></span>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                    </button>
-                    <div class="role-menu" id="role-menu">
-                        <div class="role-menu-head">Customer</div>
-                        ${custUsers.map(userRow).join('')}
-                        <div class="role-menu-head" style="border-top:1px solid var(--border-soft)">Suppliers</div>
-                        ${supUsers.map(userRow).join('')}
-                        <div class="role-menu-head" style="border-top:1px solid var(--border-soft);border-bottom:none">Demo</div>
-                        <div class="role-menu-item" data-act="reset-demo"><span>↻ Reset demo data</span></div>
-                    </div>
-                </div>
-                <button class="icon-btn" data-act="notif">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                    <span>Notifications</span>
-                    <span class="count-badge">${notifBadge}</span>
+                <button class="icon-btn" data-act="notif" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;padding:6px 10px;color:#616161;">
+                    <span style="position:relative;display:inline-flex;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span class="count-badge" style="position:absolute;top:-6px;right:-8px;background:#EF4444;color:#FFF;font-size:10px;font-weight:700;padding:1px 5px;border-radius:10px;line-height:1.2;">${notifBadge}</span>
+                    </span>
+                    <span style="font-size:13px;font-weight:500;">Notifications</span>
                 </button>
                 ${cartHtml}
-                <div class="user-profile">
-                    <div class="user-avatar">${(me.name || 'U').slice(0, 1).toUpperCase()}</div>
-                    <div class="user-info">
-                        <div class="user-name">${esc(me.name)}</div>
-                        <div class="user-company">${esc(me.company || (isCust ? 'DMP Demo Company' : 'Vendor B'))}</div>
+                <div class="user-profile" data-act="user-toggle" style="display:flex;align-items:center;gap:8px;cursor:pointer;position:relative;padding:4px 6px;border-radius:6px;">
+                    <div class="user-avatar" style="width:36px;height:36px;border-radius:50%;background:#71717A;color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;">
+                        ${isCust ? "DC" : "DS"}
+                    </div>
+                    <div class="user-info" style="display:flex;flex-direction:column;text-align:left;">
+                        <div class="user-name" style="font-size:13px;font-weight:600;color:#18181B;line-height:1.2;">${isCust ? "Demo Customer" : "Demo Supplier B"}</div>
+                        <div class="user-company" style="font-size:11.5px;color:#71717A;line-height:1.2;">${isCust ? "DMP Demo Company" : "Vendor B"}</div>
+                    </div>
+                    <div class="role-menu" id="role-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:8px;background:#FFF;border-radius:8px;box-shadow:0 10px 25px rgba(0,0,0,0.15);border:1px solid #E5E7EB;min-width:220px;z-index:99999;padding:6px 0;">
+                        <div class="role-menu-head" style="padding:6px 14px;font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;">Switch Persona (Demo)</div>
+                        <div class="role-menu-head" style="padding:6px 14px;font-size:11px;font-weight:700;color:#6B7280;background:#F9FAFB;">Customer</div>
+                        ${custUsers.map(userRow).join('')}
+                        <div class="role-menu-head" style="padding:6px 14px;font-size:11px;font-weight:700;color:#6B7280;background:#F9FAFB;border-top:1px solid #F3F4F6;">Suppliers</div>
+                        ${supUsers.map(userRow).join('')}
+                        <div class="role-menu-head" style="padding:6px 14px;font-size:11px;font-weight:700;color:#6B7280;background:#F9FAFB;border-top:1px solid #F3F4F6;">Demo Storage</div>
+                        <div class="role-menu-item" data-act="reset-demo" style="padding:8px 14px;font-size:13px;color:#EF4444;cursor:pointer;"><span>↻ Reset demo data</span></div>
                     </div>
                 </div>
             </div>`;
@@ -203,19 +188,13 @@ window.UI = (function () {
         bindActions(header, {
             "home": () => { window.location.href = location.port === '8125' ? '/main' : '../'; },
             "nav-drawer": () => openNavDrawer(),
-            "lang-toggle": () => document.getElementById("lang-menu").classList.toggle("open"),
-            "lang-pick": (t) => {
-                document.getElementById("lang-menu").classList.remove("open");
-                if (window.Store.setLang) window.Store.setLang(t.getAttribute("data-lang"));
-                renderHeader();
-            },
             "user-toggle": () => {
                 const rm = document.getElementById("role-menu");
-                if (rm) rm.classList.toggle("open");
+                if (rm) rm.style.display = (rm.style.display === "none" || !rm.style.display) ? "block" : "none";
             },
             "user-pick": (t) => {
                 const rm = document.getElementById("role-menu");
-                if (rm) rm.classList.remove("open");
+                if (rm) rm.style.display = "none";
                 window.Store.setUser(t.getAttribute("data-user"));
                 renderHeader();
                 window.Router.render();
@@ -223,7 +202,7 @@ window.UI = (function () {
             "notif": () => toggleNotifPanel(),
             "reset-demo": () => {
                 const rm = document.getElementById("role-menu");
-                if (rm) rm.classList.remove("open");
+                if (rm) rm.style.display = "none";
                 window.Store.reset();
                 toast({ kind: "success", title: "Demo reset", body: "All contracts cleared and demo data re-seeded." });
                 go("#/contracts");
@@ -235,13 +214,9 @@ window.UI = (function () {
         if (!document.__menuCloseBound) {
             document.__menuCloseBound = true;
             document.addEventListener("click", e => {
-                if (!e.target.closest(".role-switcher")) {
+                if (!e.target.closest(".user-profile")) {
                     const m = document.getElementById("role-menu");
-                    if (m) m.classList.remove("open");
-                }
-                if (!e.target.closest(".lang-switcher")) {
-                    const lm = document.getElementById("lang-menu");
-                    if (lm) lm.classList.remove("open");
+                    if (m) m.style.display = "none";
                 }
                 if (!e.target.closest(".notif-panel") && !e.target.closest("[data-act=\"notif\"]")) {
                     const np = document.getElementById("notif-panel");
@@ -560,12 +535,28 @@ window.UI = (function () {
         };
     }
 
-    /* ---------- breadcrumb band ---------- */
+    /* ---------- breadcrumb band matching demov2 ---------- */
     function breadcrumb() {
         const parts = Array.prototype.slice.call(arguments);
+        if (parts.length === 0) return "";
+        if (parts.length === 1) {
+            return `<div class="crumb-band"><span class="crumb-cur">${esc(parts[0])}</span></div>`;
+        }
         return `<div class="crumb-band">
-            <a class="crumb-muted" href="#/contracts">Contract module</a>
-            ${parts.map((p, i) => `<span class="crumb-sep">›</span><span class="${i === parts.length - 1 ? 'crumb-cur' : 'crumb-muted'}">${esc(p)}</span>`).join('')}
+            ${parts.map((p, i) => {
+                const isLast = i === parts.length - 1;
+                let href = "#/contracts";
+                if (p === "Contracts") href = "#/contracts";
+                else if (p === "Suppliers") href = "#/spm";
+                else if (p === "My Pricebooks") href = "#/pricebooks";
+                else if (p === "Contract module requests") href = "#/ctr-requests";
+                else if (p.startsWith("Contract #")) {
+                    const match = p.match(/Contract #\s*([A-Za-z0-9_-]+)/);
+                    if (match) href = `#/contracts/${match[1]}`;
+                }
+                const link = isLast ? `<span class="crumb-cur">${esc(p)}</span>` : `<a class="crumb-muted" href="${href}">${esc(p)}</a>`;
+                return (i > 0 ? `<span class="crumb-sep">›</span>` : "") + link;
+            }).join("")}
         </div>`;
     }
 

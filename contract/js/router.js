@@ -25,8 +25,13 @@ window.Router = (function () {
         if (base === "contracts") {
             if (parts[1] === "new") {
                 window.ContractFormView.render(root);
+            } else if (parts[1] === "edit" && parts[2]) {
+                window.ContractEditView.render(root, parts[2]);
             } else if (parts[1] && parts[2] === "pricebooks" && parts[3]) {
                 window.PricebookDetailView.render(root, parts[1], parts[3]);
+            } else if (parts[1] && parts[2] === "pricebooks") {
+                const tab = queryParams.get("tab") || "pricebook";
+                window.ContractDetailView.render(root, parts[1], tab);
             } else if (parts[1]) {
                 const tab = queryParams.get("tab") || "pricebook";
                 window.ContractDetailView.render(root, parts[1], tab);
@@ -40,7 +45,7 @@ window.Router = (function () {
                 // Global pricebooks view shows list of all pricebooks
                 renderGlobalPricebooks(root);
             }
-        } else if (base === "ctr-requests") {
+        } else if (base === "ctr-requests" || base === "requests") {
             window.CTRRequestsView.render(root);
         } else if (base === "spm") {
             window.SPMSuppliersView.render(root);
@@ -56,7 +61,7 @@ window.Router = (function () {
         const pbs = window.ContractWorkflow.filterPricebooksForUser(allPbs, me, window.Store.contracts());
 
         root.innerHTML = `
-            ${window.UI.breadcrumb("Contracts", "Pricebooks")}
+            ${window.UI.breadcrumb("My Pricebooks")}
 
             <div class="main-content" style="max-width: 1400px; margin: 0 auto; padding: 20px 28px;">
                 <div class="toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
