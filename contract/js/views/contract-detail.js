@@ -95,8 +95,8 @@ window.ContractDetailView = (function () {
                         </div>
 
                         <!-- Expander toggle chevron ︽ -->
-                        <div class="verticalExpanderToggle-WLNyNb" id="toggle-hero-btn" title="Toggle contract details">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="#3A3A3A" xmlns="http://www.w3.org/2000/svg" style="${isHeroCollapsed ? 'transform:rotate(180deg);' : ''}">
+                        <div class="verticalExpanderToggle-WLNyNb" id="toggle-hero-btn" title="Toggle contract details" style="cursor: pointer;">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="#3A3A3A" xmlns="http://www.w3.org/2000/svg" style="${isHeroCollapsed ? 'transform:rotate(180deg);' : ''}; transition: transform 0.2s;">
                                 <path d="M14.2319 6.71766C14.3386 6.82506 14.3991 6.96986 14.4006 7.12123C14.4021 7.2726 14.3444 7.41858 14.2399 7.52806C14.1891 7.58167 14.128 7.62454 14.0604 7.65412C13.9927 7.68371 13.9198 7.69942 13.8459 7.70031C13.7721 7.70121 13.6988 7.68727 13.6304 7.65934C13.5621 7.6314 13.5 7.59002 13.4479 7.53766L8.0823 2.17766L2.5559 7.83366C2.50445 7.88664 2.44289 7.92876 2.37487 7.95752C2.30685 7.98628 2.23375 8.0011 2.1599 8.0011C2.08605 8.0011 2.01295 7.98628 1.94493 7.95752C1.87691 7.92876 1.81535 7.88664 1.7639 7.83366C1.65872 7.72515 1.59991 7.57997 1.59991 7.42886C1.59991 7.27774 1.65872 7.13256 1.7639 7.02406L7.6799 0.968058C7.73102 0.915428 7.79212 0.873517 7.85962 0.844776C7.92713 0.816034 7.99969 0.801039 8.07306 0.800666C8.14643 0.800294 8.21913 0.814552 8.28693 0.842607C8.35472 0.870661 8.41625 0.91195 8.4679 0.964058L14.2319 6.71766ZM14.2319 13.9177C14.3383 14.025 14.3987 14.1697 14.4002 14.3208C14.4017 14.472 14.3442 14.6178 14.2399 14.7273C14.1891 14.7809 14.128 14.8237 14.0604 14.8533C13.9927 14.8829 13.9198 14.8986 13.8459 14.8995C13.7721 14.9004 13.6988 14.8865 13.6304 14.8585C13.5621 14.8306 13.5 14.7892 13.4479 14.7369L8.0823 9.37686L2.5559 15.0329C2.50445 15.0858 2.44289 15.128 2.37487 15.1567C2.30685 15.1855 2.23375 15.2003 2.1599 15.2003C2.08605 15.2003 2.01295 15.1855 1.94493 15.1567C1.87691 15.128 1.81535 15.0858 1.7639 15.0329C1.65872 14.9244 1.59991 14.7792 1.59991 14.6281C1.59991 14.4769 1.65872 14.3318 1.7639 14.2233L7.6799 8.16806C7.73102 8.11543 7.79212 8.07352 7.85962 8.04478C7.92713 8.01603 7.99969 8.00104 8.07306 8.00067C8.14643 0.800294 8.21913 0.814552 8.28693 0.84261C8.35472 0.87066 8.41625 0.91195 8.4679 0.96406L14.2319 13.9177Z" fill="#3A3A3A"/>
                             </svg>
                         </div>
@@ -104,15 +104,15 @@ window.ContractDetailView = (function () {
                 </div>
 
                 ${isCust ? `
-                <!-- 5 Connected Segmented Tabs for Customer -->
+                <!-- 5 Connected Segmented Tabs for Customer matching demov2 -->
                 <div class="tabsWrapper-NSSGrZ">
                     <div>
                         <div class="tabs-Ugdckk tabsContainer-QAZ9xC">
-                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'pricebook' ? 'active-H9_pwE' : ''}" data-tab="pricebook">Pricebook</div>
-                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'supplier' ? 'active-H9_pwE' : ''}" data-tab="supplier">Supplier</div>
-                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'kpi' ? 'active-H9_pwE' : ''}" data-tab="kpi">KPI</div>
-                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'performance' ? 'active-H9_pwE' : ''}" data-tab="performance">Performance Report</div>
-                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'dashboards' ? 'active-H9_pwE' : ''}" data-tab="dashboards">Dashboards</div>
+                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'pricebook' ? 'active-H9_pwE' : ''}" data-tab="pricebook" style="cursor:pointer;">Pricebook</div>
+                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'supplier' ? 'active-H9_pwE' : ''}" data-tab="supplier" style="cursor:pointer;">Supplier</div>
+                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'kpi' ? 'active-H9_pwE' : ''}" data-tab="kpi" style="cursor:pointer;">KPI</div>
+                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'performance' ? 'active-H9_pwE' : ''}" data-tab="performance" style="cursor:pointer;">Performance Report</div>
+                            <div class="tab-_vau_a tab-iuHCpT ${activeTab === 'dashboards' ? 'active-H9_pwE' : ''}" data-tab="dashboards" style="cursor:pointer;">Dashboards</div>
                         </div>
                     </div>
 
@@ -122,16 +122,17 @@ window.ContractDetailView = (function () {
                         ${activeTab === "supplier" ? renderSupplierTab(contract) : ""}
                         ${activeTab === "kpi" ? renderKPITab(contract, kpis, isCust) : ""}
                         ${activeTab === "performance" ? renderPerformanceTab(contract, reports, isCust) : ""}
-                        ${activeTab === "dashboards" ? renderDashboardsTab(contract, pricebooks, kpis, reports) : ""}
+                        ${activeTab === "dashboards" ? renderDashboardsTab(contract) : ""}
                     </div>
                 </div>
                 ` : `
-                <!-- Supplier View: Direct Pricebooks table without tabs header -->
+                <!-- Supplier View: Direct Pricebooks table without tabs header matching 09_supplier_contract_detail.png -->
                 <div class="tabContent-kOFLBy tabContent-n_Wx8b" style="margin-top: 16px;">
                     ${renderPricebookTab(contract, pricebooks, isCust)}
                 </div>
                 `}
             </div>
+            ${window.UI.renderFeedbackBubble ? window.UI.renderFeedbackBubble() : ""}
         `;
 
         // Bind Hero Toggle
@@ -148,13 +149,12 @@ window.ContractDetailView = (function () {
             });
         }
 
-        // Bind Sub-Tabs Switching
+        // Bind Sub-Tabs Switching via URL Hash
         root.querySelectorAll(".tab-iuHCpT").forEach(tabEl => {
             tabEl.addEventListener("click", () => {
                 const target = tabEl.getAttribute("data-tab");
-                if (target && target !== activeTab) {
-                    activeTab = target;
-                    render(root, contractId, target);
+                if (target) {
+                    window.location.hash = `#/contracts/${contractId}/${target}`;
                 }
             });
         });
@@ -164,7 +164,7 @@ window.ContractDetailView = (function () {
     }
 
     /* -------------------------------------------------------------
-       Tab 1: Pricebook Tab View matching 03_contract_detail.png
+       Tab 1: Pricebook Tab View matching 05_contract_detail_pricebooks.png
        ------------------------------------------------------------- */
     function renderPricebookTab(contract, pricebooks, isCust) {
         let filteredPbs = pricebooks;
@@ -180,7 +180,7 @@ window.ContractDetailView = (function () {
         return `
             <div class="flex-column h-full tabView-HlFARP">
                 <div class="motion-content filter-layout">
-                    <!-- Left Sidebar matching 03_contract_detail.png -->
+                    <!-- Left Sidebar matching demov2 -->
                     <aside class="card-eNpN6p flex-column sidebar-AY7Hhf fillHeight-gnyNzB" data-minimized="false" style="width: 260px;">
                         <div class="flex-center filterArrow-jGyFr7">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -230,7 +230,7 @@ window.ContractDetailView = (function () {
                         </div>
                     </aside>
 
-                    <!-- Table Card Container matching 03_contract_detail.png -->
+                    <!-- Table Card Container matching demov2 -->
                     <section class="content-table contentTable-_531TS contentTable-ZmxBPD">
                         <div class="flex-column tableContainer-GCJvcD">
                             <div class="flex-align-center tableHeader-aYWNqq" data-testid="table-header" style="justify-content: space-between;">
@@ -246,7 +246,7 @@ window.ContractDetailView = (function () {
                                 </div>
                                 ${!isCust ? `
                                 <div>
-                                    <button class="inline-flex-center button-z6sbMq solid-qA3WwL primary-wQbOYq" data-act="create-pricebook" style="height: 40px; padding: 0 16px;">
+                                    <button class="inline-flex-center button-z6sbMq solid-qA3WwL primary-wQbOYq" data-act="create-pricebook" style="height: 40px; padding: 0 16px; background: #111827; color: #FFFFFF; border: none; border-radius: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer;">
                                         <span class="flex-align-center label-FlMxDR">Create pricebook</span>
                                     </button>
                                 </div>
@@ -265,11 +265,12 @@ window.ContractDetailView = (function () {
                                             <th style="min-width: 180px; width: 180px;">External pricebook number</th>
                                             <th>Currency</th>
                                             <th style="min-width: 250px; width: 250px;">Creation date and time</th>
+                                            <th style="width: 48px; min-width: 48px;"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         ${filteredPbs.length === 0 ? `
-                                            <tr><td colspan="8" style="text-align:center;padding:40px 20px;background:#fff;">${window.UI.emptyFolder("No pricebooks have been created yet.")}</td></tr>
+                                            <tr><td colspan="9" style="text-align:center;padding:40px 20px;background:#fff;">${window.UI.emptyFolder("No pricebooks have been created yet.")}</td></tr>
                                         ` : filteredPbs.map((pb, idx) => {
                                             const pbNum = pb.pricebook_number ? pb.pricebook_number.replace(/^[A-Za-z]+-/, "") : (idx + 1);
                                             return `
@@ -290,9 +291,9 @@ window.ContractDetailView = (function () {
                                                         </a>
                                                     </td>
                                                     <td style="min-width: 180px; width: 180px;">
-                                                        <div class="flex-align-center cellWithIcon-aKqXE6" style="gap: 8px;">
+                                                        <div class="flex-align-center cellWithIcon-aKqXE6" style="gap: 8px; justify-content: space-between;">
                                                             <span>${window.UI.esc(pb.external_pricebook_number || "1234512")}</span>
-                                                            <div class="flex-center editIconWrapper-ut4yEH" style="cursor: pointer;" title="Edit External Number">
+                                                            <div class="flex-center editIconWrapper-ut4yEH" data-act="edit-external-pb-num" data-cid="${contract.id}" data-pbid="${pb.id}" style="cursor: pointer; padding: 4px;" title="Edit External Number">
                                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="#666666" xmlns="http://www.w3.org/2000/svg" class="editIcon-RqkAZC">
                                                                     <path d="M0.533333 10.1333L0.15621 9.75621L0 9.91242V10.1333H0.533333ZM10.1333 0.533333L10.5105 0.15621C10.3022 -0.05207 9.96449 -0.05207 9.75621 0.15621L10.1333 0.533333ZM15.4667 5.86667L15.8438 6.24379C16.0521 6.03551 16.0521 5.69782 15.8438 5.48955L15.4667 5.86667ZM5.86667 15.4667V16H6.08758L6.24379 15.8438L5.86667 15.4667ZM0.533333 15.4667H0C0 15.7612 0.238782 16 0.533333 16V15.4667ZM0.910457 10.5105L10.5105 0.910456L9.75621 0.15621L0.15621 9.75621L0.910457 10.5105ZM9.75621 0.910456L15.0895 6.24379L15.8438 5.48955L10.5105 0.15621L9.75621 0.910456ZM15.0895 5.48955L5.48955 15.0895L6.24379 15.8438L15.8438 6.24379L15.0895 5.48955ZM5.86667 14.9333H0.533333V16H5.86667V14.9333ZM1.06667 15.4667V10.1333H0V15.4667H1.06667ZM6.55621 4.11045L11.8895 9.44379L12.6438 8.68955L7.31045 3.35621L6.55621 4.11045ZM8.53333 16H16V14.9333H8.53333V16Z" fill="#666666"/>
                                                                 </svg>
@@ -301,6 +302,15 @@ window.ContractDetailView = (function () {
                                                     </td>
                                                     <td style="min-width: 120px;">${pb.currency || "USD"}</td>
                                                     <td style="min-width: 250px; width: 250px;">${pb.created_at ? (pb.created_at.includes(" ") ? pb.created_at : `${pb.created_at} 07:00:37`) : "2026-04-27 07:00:37"}</td>
+                                                    <td style="text-align: right; width: 48px; min-width: 48px;">
+                                                        <button type="button" class="inline-flex-center button-z6sbMq ant-dropdown-trigger trigger-Z_D8XQ link-xtI0I7 primary-wQbOYq" data-act="pb-options" data-cid="${contract.id}" data-pbid="${pb.id}" aria-label="More options" style="width: 32px; height: 32px; border-radius: 50%; border: none; background: #F3F4F6; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;" title="More options">
+                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="#121212" xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66675 7.99996C6.66675 7.26358 7.2637 6.66663 8.00008 6.66663C8.73646 6.66663 9.33341 7.26358 9.33341 7.99996C9.33341 8.73634 8.73646 9.33329 8.00008 9.33329C7.2637 9.33329 6.66675 8.73634 6.66675 7.99996Z" fill="#121212"></path>
+                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66675 3.33333C6.66675 2.59695 7.2637 2 8.00008 2C8.73646 2 9.33341 2.59695 9.33341 3.33333C9.33341 4.06971 8.73646 4.66667 8.00008 4.66667C7.2637 4.66667 6.66675 4.06971 6.66675 3.33333Z" fill="#121212"></path>
+                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66675 12.6667C6.66675 11.9303 7.2637 11.3334 8.00008 11.3334C8.73646 11.3334 9.33341 11.9303 9.33341 12.6667C9.33341 13.4031 8.73646 14 8.00008 14C7.2637 14 6.66675 13.4031 6.66675 12.6667Z" fill="#121212"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             `;
                                         }).join("")}
@@ -308,7 +318,7 @@ window.ContractDetailView = (function () {
                                 </table>
                             </div>
 
-                            <!-- Pagination matching 03_contract_detail.png -->
+                            <!-- Pagination matching demov2 -->
                             <div class="pagination-Qo0Zyp hasBackground-KRB3Nk" style="justify-content: flex-end;">
                                 <div class="pagination-controls">
                                     <button class="inline-flex-center navButton-ifUhzO" disabled="" aria-label="Previous page">
@@ -350,7 +360,7 @@ window.ContractDetailView = (function () {
     }
 
     /* -------------------------------------------------------------
-       Tab 2: Supplier Tab View matching tab_supplier.png
+       Tab 2: Supplier Tab View matching 11_tab_supplier.png
        ------------------------------------------------------------- */
     function renderSupplierTab(contract) {
         return `
@@ -366,45 +376,37 @@ window.ContractDetailView = (function () {
                 <h3 style="font-size: 17px; font-weight: 600; color: #111827; margin: 0 0 16px 0;">Supplier Information</h3>
 
                 <div class="supplierInfoList">
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Performance</span>
-                        <span class="supplierInfoList-value">-</span>
+                    <div class="supplierInfoList-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #F3F4F6; font-size:14px;">
+                        <span style="color:#374151;">Performance</span>
+                        <span style="color:#111827; font-weight:500;">-</span>
                     </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Due Diligence Status</span>
-                        <span class="supplierInfoList-value">-</span>
+                    <div class="supplierInfoList-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #F3F4F6; font-size:14px;">
+                        <span style="color:#374151;">Due Diligence Status</span>
+                        <span style="color:#111827; font-weight:500;">-</span>
                     </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Supply Market Abundance/Scarcity</span>
-                        <span class="supplierInfoList-value">-</span>
+                    <div class="supplierInfoList-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #F3F4F6; font-size:14px;">
+                        <span style="color:#374151;">Supply Market Abundance/Scarcity</span>
+                        <span style="color:#111827; font-weight:500;">-</span>
                     </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Business Impact (if supply stops suddenly)</span>
-                        <span class="supplierInfoList-value">-</span>
+                    <div class="supplierInfoList-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #F3F4F6; font-size:14px;">
+                        <span style="color:#374151;">Business Impact (if supply stops suddenly)</span>
+                        <span style="color:#111827; font-weight:500;">-</span>
                     </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Financial Health</span>
-                        <span class="supplierInfoList-value">-</span>
+                    <div class="supplierInfoList-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #F3F4F6; font-size:14px;">
+                        <span style="color:#374151;">Financial Health</span>
+                        <span style="color:#111827; font-weight:500;">-</span>
                     </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">HSE Quality Status</span>
-                        <span class="supplierInfoList-value">-</span>
+                    <div class="supplierInfoList-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #F3F4F6; font-size:14px;">
+                        <span style="color:#374151;">HSE Quality Status</span>
+                        <span style="color:#111827; font-weight:500;">-</span>
                     </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Business Criticality</span>
-                        <span class="supplierInfoList-value">-</span>
+                    <div class="supplierInfoList-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #F3F4F6; font-size:14px;">
+                        <span style="color:#374151;">Business Criticality</span>
+                        <span style="color:#111827; font-weight:500;">-</span>
                     </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Safety Criticality</span>
-                        <span class="supplierInfoList-value">-</span>
-                    </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Total Contract Value</span>
-                        <span class="supplierInfoList-value" style="font-weight: 700;">${contract.approved_value ? contract.approved_value.toLocaleString() : "68234115"}</span>
-                    </div>
-                    <div class="supplierInfoList-item">
-                        <span class="supplierInfoList-label">Weight in Spend (% of Contract Value in Annual Spend)</span>
-                        <span class="supplierInfoList-value">0.21</span>
+                    <div class="supplierInfoList-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #F3F4F6; font-size:14px;">
+                        <span style="color:#374151;">Safety Criticality</span>
+                        <span style="color:#111827; font-weight:500;">-</span>
                     </div>
                 </div>
             </div>
@@ -412,14 +414,14 @@ window.ContractDetailView = (function () {
     }
 
     /* -------------------------------------------------------------
-       Tab 3: KPI Monthly Tracking View matching tab_kpi.png
+       Tab 3: KPI Tracking View matching 12_tab_kpi.png
        ------------------------------------------------------------- */
     function renderKPITab(contract, kpis, isCust) {
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         return `
             <div class="flex-column h-full tabView-HlFARP">
                 <div class="motion-content filter-layout">
-                    <!-- Left Sidebar matching tab_kpi.png -->
+                    <!-- Left Sidebar matching 12_tab_kpi.png -->
                     <aside class="card-eNpN6p flex-column sidebar-AY7Hhf fillHeight-gnyNzB" data-minimized="false" style="width: 260px;">
                         <div class="flex-center filterArrow-jGyFr7">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -462,7 +464,7 @@ window.ContractDetailView = (function () {
                         </div>
                     </aside>
 
-                    <!-- Right Table Card matching tab_kpi.png -->
+                    <!-- Right Table Card matching 12_tab_kpi.png -->
                     <section class="content-table contentTable-_531TS contentTable-ZmxBPD">
                         <div class="flex-column tableContainer-GCJvcD">
                             <div class="flex-align-center tableHeader-aYWNqq" style="justify-content: space-between; padding: 18px 20px;">
@@ -474,7 +476,7 @@ window.ContractDetailView = (function () {
                                     </div>
                                 </div>
                                 <div>
-                                    <button class="inline-flex-center button-z6sbMq solid-qA3WwL primary-wQbOYq" data-act="create-kpi" style="height: 38px; padding: 0 16px;">
+                                    <button class="inline-flex-center button-z6sbMq solid-qA3WwL primary-wQbOYq" data-act="create-kpi" style="height: 38px; padding: 0 16px; background: #111827; color: #FFFFFF; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
                                         <span class="flex-align-center label-FlMxDR">Create KPI</span>
                                     </button>
                                 </div>
@@ -492,7 +494,7 @@ window.ContractDetailView = (function () {
                                     <tbody>
                                         ${kpis.length === 0 ? `
                                             <tr>
-                                                <td style="font-weight: 600;">On-time delivery</td>
+                                                <td style="font-weight: 600; color: #111827; text-align: left;">On-time delivery</td>
                                                 <td>&lt;5</td>
                                                 ${months.map(() => `<td style="text-align:center; color: #9CA3AF;">-</td>`).join("")}
                                             </tr>
@@ -552,7 +554,7 @@ window.ContractDetailView = (function () {
     }
 
     /* -------------------------------------------------------------
-       Tab 4: Performance Report View matching tab_performance_report.png
+       Tab 4: Performance Report View matching 13_tab_performance_report.png
        ------------------------------------------------------------- */
     function renderPerformanceTab(contract, reports, isCust) {
         const defaultReports = [
@@ -567,7 +569,7 @@ window.ContractDetailView = (function () {
         return `
             <div class="flex-column h-full tabView-HlFARP">
                 <div class="motion-content filter-layout">
-                    <!-- Left Sidebar matching tab_performance_report.png -->
+                    <!-- Left Sidebar matching 13_tab_performance_report.png -->
                     <aside class="card-eNpN6p flex-column sidebar-AY7Hhf fillHeight-gnyNzB" data-minimized="false" style="width: 260px;">
                         <div class="flex-center filterArrow-jGyFr7">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -621,13 +623,13 @@ window.ContractDetailView = (function () {
                         </div>
                     </aside>
 
-                    <!-- Right Table Card matching tab_performance_report.png -->
+                    <!-- Right Table Card matching 13_tab_performance_report.png -->
                     <section class="content-table contentTable-_531TS contentTable-ZmxBPD">
                         <div class="flex-column tableContainer-GCJvcD">
                             <div class="flex-align-center tableHeader-aYWNqq" style="justify-content: space-between; padding: 18px 20px;">
                                 <h3 style="font-size: 16px; font-weight: 700; color: #111827; margin: 0;">Performance Report</h3>
                                 <div>
-                                    <button class="inline-flex-center button-z6sbMq solid-qA3WwL" data-act="create-report" style="height: 38px; padding: 0 16px; background: #E5E7EB; color: #9CA3AF; border-radius: 6px;">
+                                    <button class="inline-flex-center button-z6sbMq solid-qA3WwL" disabled style="height: 38px; padding: 0 16px; background: #F3F4F6; color: #9CA3AF; border: 1px solid #E5E7EB; border-radius: 6px; cursor: not-allowed;">
                                         <span class="flex-align-center label-FlMxDR">Create Report</span>
                                     </button>
                                 </div>
@@ -658,7 +660,7 @@ window.ContractDetailView = (function () {
                                                 <tr>
                                                     <td style="font-weight: 600;">${window.UI.esc(rep.id.replace(/^[A-Za-z]+-/, ""))}</td>
                                                     <td>
-                                                        <span class="${isPip ? 'badge-pip' : 'badge-ncr'}">${rep.type}</span>
+                                                        <span class="${isPip ? 'badge-pip' : 'badge-ncr'}" style="display:inline-block; padding:2px 8px; border-radius:4px; font-weight:600; font-size:12px; ${isPip ? 'border:1px solid #F59E0B; color:#D97706; background:#FFFBEB;' : 'border:1px solid #EF4444; color:#DC2626; background:#FEF2F2;'}">${rep.type}</span>
                                                     </td>
                                                     <td style="font-weight: 500; color: #111827;">${window.UI.esc(rep.title)}</td>
                                                     <td>
@@ -670,7 +672,7 @@ window.ContractDetailView = (function () {
                                                     <td>${rep.actions || `${rep.actions_done || 0}/${rep.actions_total || 0}`}</td>
                                                     <td>
                                                         <div style="font-size: 12px; margin-bottom: 2px;">${rep.progress_pct || rep.progress || 0}%</div>
-                                                        <div style="height: 4px; width: 100px; background: #6B7280; border-radius: 2px; overflow: hidden;">
+                                                        <div style="height: 4px; width: 100px; background: #E5E7EB; border-radius: 2px; overflow: hidden;">
                                                             <div style="height: 100%; width: ${rep.progress_pct || rep.progress || 0}%; background: #1E3A0F;"></div>
                                                         </div>
                                                     </td>
@@ -725,47 +727,21 @@ window.ContractDetailView = (function () {
     }
 
     /* -------------------------------------------------------------
-       Tab 5: Dashboards & Analytics matching tab_dashboards.png
+       Tab 5: Dashboards matching 14_tab_dashboards.png
        ------------------------------------------------------------- */
-    function renderDashboardsTab(contract, pricebooks, kpis, reports) {
+    function renderDashboardsTab(contract) {
         return `
-            <div class="flex-column h-full tabView-HlFARP" style="padding-top: 6px;">
-                <div style="margin-bottom: 24px; width: 220px;">
+            <div class="flex-column h-full tabView-HlFARP" style="padding: 16px 20px; background: #FFFFFF; border-radius: 8px; min-height: 480px;">
+                <div style="width: 200px;">
                     <div class="container-sIDwkX">
-                        <div class="ant-select ant-select-outlined select-l8uECl ant-select-single ant-select-show-arrow">
-                            <div class="ant-select-selector">
-                                <span class="ant-select-selection-item">Action Level</span>
+                        <div class="ant-select ant-select-outlined select-l8uECl ant-select-single ant-select-show-arrow" style="width: 100%;">
+                            <div class="ant-select-selector" style="height: 38px; display: flex; align-items: center; border: 1px solid #D9D9D9; border-radius: 6px; padding: 0 12px; background: #FFF;">
+                                <span class="ant-select-selection-item" style="font-size: 13.5px; color: #111827;">Action Level</span>
                             </div>
-                            <span class="ant-select-arrow">
+                            <span class="ant-select-arrow" style="position: absolute; right: 12px; top: 14px;">
                                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round"/></svg>
                             </span>
                         </div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                    <div class="card-eNpN6p" style="padding: 24px; background: #FFFFFF; border-radius: 8px;">
-                        <span style="font-size: 13px; color: #6B7280; font-weight: 600;">APPROVED CONTRACT VALUE</span>
-                        <div style="font-size: 28px; font-weight: 800; color: #1E3A0F; margin: 12px 0 8px 0;">
-                            ${window.UI.money(contract.approved_value || 18990, contract.currency || "USD")}
-                        </div>
-                        <span style="font-size: 12px; color: #10B981; font-weight: 500;">✓ 100% committed ceiling</span>
-                    </div>
-
-                    <div class="card-eNpN6p" style="padding: 24px; background: #FFFFFF; border-radius: 8px;">
-                        <span style="font-size: 13px; color: #6B7280; font-weight: 600;">ATTACHED PRICEBOOKS</span>
-                        <div style="font-size: 28px; font-weight: 800; color: #111827; margin: 12px 0 8px 0;">
-                            ${pricebooks.length || 1}
-                        </div>
-                        <span style="font-size: 12px; color: #6B7280;">181 total catalog items</span>
-                    </div>
-
-                    <div class="card-eNpN6p" style="padding: 24px; background: #FFFFFF; border-radius: 8px;">
-                        <span style="font-size: 13px; color: #6B7280; font-weight: 600;">ACTIVE NCR / PIP INCIDENTS</span>
-                        <div style="font-size: 28px; font-weight: 800; color: #D97706; margin: 12px 0 8px 0;">
-                            3 Open
-                        </div>
-                        <span style="font-size: 12px; color: #6B7280;">1 Incident resolved this period</span>
                     </div>
                 </div>
             </div>
@@ -783,26 +759,45 @@ window.ContractDetailView = (function () {
                 const q = pbSearchQuery.toLowerCase();
                 const filtered = pbs.filter(p =>
                     (p.description && p.description.toLowerCase().includes(q)) ||
-                    (p.pricebook_number && p.pricebook_number.toLowerCase().includes(q))
+                    (p.pricebook_number && p.pricebook_number.toLowerCase().includes(q)) ||
+                    (p.external_pricebook_number && p.external_pricebook_number.toLowerCase().includes(q))
                 );
                 if (tbody) {
                     if (filtered.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:36px;color:#6B7280;">No pricebooks match your search.</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:36px;color:#6B7280;">No pricebooks match your search.</td></tr>`;
                     } else {
                         tbody.innerHTML = filtered.map((pb, idx) => `
                             <tr data-act="open-pb" data-cid="${contract.id}" data-pbid="${pb.id}" style="cursor: pointer;">
                                 <td style="min-width: 60px; width: 60px;">${idx + 1}</td>
                                 <td style="min-width: 120px; width: 120px;">
-                                    <a href="#/contracts/${contract.id}/pricebooks/${pb.id}" class="link-h7l698" style="font-weight: 600; color: #111827;">${pb.pricebook_number.replace(/^[A-Za-z]+-/, "")}</a>
+                                    <a href="#/contracts/${contract.id}/pricebooks/${pb.id}" class="link-h7l698" style="font-weight: 600; color: #111827;">${(pb.pricebook_number || pb.id).replace(/^[A-Za-z]+-/, "")}</a>
                                 </td>
                                 <td>${pb.items_count || 181}</td>
                                 <td style="min-width: 100px; width: 100px;">
                                     <div class="flex-center chip-Dqdeip ${pb.status === 'Active' ? 'success-BmS3ka' : 'danger-W_r0xP'}">${pb.status || 'Active'}</div>
                                 </td>
                                 <td><a href="#/contracts/${contract.id}/pricebooks/${pb.id}" class="link-h7l698" style="color: #111827;">${window.UI.esc(pb.description)}</a></td>
-                                <td>${window.UI.esc(pb.external_pricebook_number || "1234512")}</td>
+                                <td style="min-width: 180px; width: 180px;">
+                                    <div class="flex-align-center cellWithIcon-aKqXE6" style="gap: 8px; justify-content: space-between;">
+                                        <span>${window.UI.esc(pb.external_pricebook_number || "1234512")}</span>
+                                        <div class="flex-center editIconWrapper-ut4yEH" data-act="edit-external-pb-num" data-cid="${contract.id}" data-pbid="${pb.id}" style="cursor: pointer; padding: 4px;" title="Edit External Number">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="#666666" xmlns="http://www.w3.org/2000/svg" class="editIcon-RqkAZC">
+                                                <path d="M0.533333 10.1333L0.15621 9.75621L0 9.91242V10.1333H0.533333ZM10.1333 0.533333L10.5105 0.15621C10.3022 -0.05207 9.96449 -0.05207 9.75621 0.15621L10.1333 0.533333ZM15.4667 5.86667L15.8438 6.24379C16.0521 6.03551 16.0521 5.69782 15.8438 5.48955L15.4667 5.86667ZM5.86667 15.4667V16H6.08758L6.24379 15.8438L5.86667 15.4667ZM0.533333 15.4667H0C0 15.7612 0.238782 16 0.533333 16V15.4667ZM0.910457 10.5105L10.5105 0.910456L9.75621 0.15621L0.15621 9.75621L0.910457 10.5105ZM9.75621 0.910456L15.0895 6.24379L15.8438 5.48955L10.5105 0.15621L9.75621 0.910456ZM15.0895 5.48955L5.48955 15.0895L6.24379 15.8438L15.8438 6.24379L15.0895 5.48955ZM5.86667 14.9333H0.533333V16H5.86667V14.9333ZM1.06667 15.4667V10.1333H0V15.4667H1.06667ZM6.55621 4.11045L11.8895 9.44379L12.6438 8.68955L7.31045 3.35621L6.55621 4.11045ZM8.53333 16H16V14.9333H8.53333V16Z" fill="#666666"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td>${pb.currency || "USD"}</td>
-                                <td>${pb.created_at ? `${pb.created_at} 07:00:37` : "2026-04-27 07:00:37"}</td>
+                                <td>${pb.created_at ? (pb.created_at.includes(" ") ? pb.created_at : `${pb.created_at} 07:00:37`) : "2026-04-27 07:00:37"}</td>
+                                <td style="text-align: right; width: 48px; min-width: 48px;">
+                                    <button type="button" class="inline-flex-center button-z6sbMq ant-dropdown-trigger trigger-Z_D8XQ link-xtI0I7 primary-wQbOYq" data-act="pb-options" data-cid="${contract.id}" data-pbid="${pb.id}" aria-label="More options" style="width: 32px; height: 32px; border-radius: 50%; border: none; background: #F3F4F6; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;" title="More options">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="#121212" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66675 7.99996C6.66675 7.26358 7.2637 6.66663 8.00008 6.66663C8.73646 6.66663 9.33341 7.26358 9.33341 7.99996C9.33341 8.73634 8.73646 9.33329 8.00008 9.33329C7.2637 9.33329 6.66675 8.73634 6.66675 7.99996Z" fill="#121212"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66675 3.33333C6.66675 2.59695 7.2637 2 8.00008 2C8.73646 2 9.33341 2.59695 9.33341 3.33333C9.33341 4.06971 8.73646 4.66667 8.00008 4.66667C7.2637 4.66667 6.66675 4.06971 6.66675 3.33333Z" fill="#121212"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66675 12.6667C6.66675 11.9303 7.2637 11.3334 8.00008 11.3334C8.73646 11.3334 9.33341 11.9303 9.33341 12.6667C9.33341 13.4031 8.73646 14 8.00008 14C7.2637 14 6.66675 13.4031 6.66675 12.6667Z" fill="#121212"></path>
+                                        </svg>
+                                    </button>
+                                </td>
                             </tr>
                         `).join("");
                     }
@@ -814,11 +809,44 @@ window.ContractDetailView = (function () {
         window.UI.bindActions(root, {
             "create-pricebook": () => window.UI.openPricebookModal({ contract, onSuccess: () => render(root, contractId, "pricebook") }),
             "create-kpi": () => openCreateKPIModal(contract, () => render(root, contractId, "kpi")),
-            "create-report": () => {},
             "open-pb": (t) => {
                 const cid = t.getAttribute("data-cid");
                 const pbid = t.getAttribute("data-pbid");
                 window.location.hash = `#/contracts/${cid}/pricebooks/${pbid}`;
+            },
+            "edit-external-pb-num": (t) => {
+                const cid = t.getAttribute("data-cid");
+                const pbid = t.getAttribute("data-pbid");
+                const pb = window.Store.pricebooks().find(x => x.id === pbid);
+                const currVal = pb ? (pb.external_pricebook_number || "") : "";
+                const newVal = prompt("Enter new external pricebook number:", currVal);
+                if (newVal !== null && newVal.trim() !== "") {
+                    window.Store.set(s => {
+                        const target = (s.pricebooks || []).find(x => x.id === pbid);
+                        if (target) target.external_pricebook_number = newVal.trim();
+                    });
+                    window.UI.toast({ kind: "success", title: "Pricebook Updated", body: `External pricebook number set to ${newVal.trim()}` });
+                    render(root, cid, "pricebook");
+                }
+            },
+            "pb-options": (t) => {
+                const cid = t.getAttribute("data-cid");
+                const pbid = t.getAttribute("data-pbid");
+                const pb = window.Store.pricebooks().find(x => x.id === pbid);
+                window.UI.showActionMenu(t, [
+                    {
+                        label: "Download pricebook",
+                        onClick: () => {
+                            window.UI.toast({ kind: "success", title: "Download Started", body: `Downloading pricebook #${pb ? (pb.pricebook_number || pbid) : pbid}...` });
+                        }
+                    },
+                    {
+                        label: "Benchmark",
+                        onClick: () => {
+                            window.UI.toast({ kind: "info", title: "Benchmark Initiated", body: `Pricebook benchmarking request submitted.` });
+                        }
+                    }
+                ]);
             },
             "edit-kpi-cell": (t) => {
                 const kpiId = t.getAttribute("data-kpi");
@@ -854,11 +882,6 @@ window.ContractDetailView = (function () {
                 }
             };
         });
-    }
-
-    /* Helper Modals */
-    function openCreatePricebookModal(contract, cb) {
-        window.UI.openPricebookModal({ contract, onSuccess: cb });
     }
 
     function openCreateKPIModal(contract, cb) {
@@ -1027,73 +1050,5 @@ window.ContractDetailView = (function () {
         };
     }
 
-    function openCreateReportModal(contract, cb) {
-        window.UI.openModal({
-            title: `Issue Performance Report (NCR / PIP)`,
-            bodyHtml: `
-                <form id="rep-form" style="display:flex; flex-direction:column; gap: 14px;">
-                    <div>
-                        <label class="label-uhdLaM">Report Type <span style="color:#EF4444;">*</span></label>
-                        <select class="input-YKgOhO w-full" name="type">
-                            <option value="NCR">NCR — Non-Conformance Report</option>
-                            <option value="PIP">PIP — Performance Improvement Plan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="label-uhdLaM">Incident Title <span style="color:#EF4444;">*</span></label>
-                        <input type="text" class="input-YKgOhO w-full" name="title" placeholder="e.g. Broken packaging or late delivery" required>
-                    </div>
-                    <div>
-                        <label class="label-uhdLaM">Priority</label>
-                        <select class="input-YKgOhO w-full" name="priority">
-                            <option value="Medium">Medium</option>
-                            <option value="High">High</option>
-                            <option value="Critical">Critical</option>
-                            <option value="Low">Low</option>
-                        </select>
-                    </div>
-                </form>
-            `,
-            buttons: [
-                { label: "Cancel", cls: "button-z6sbMq solid-qA3WwL", onClick: ov => ov.remove() },
-                {
-                    label: "Submit Report",
-                    cls: "button-z6sbMq solid-qA3WwL primary-wQbOYq",
-                    onClick: ov => {
-                        const form = ov.querySelector("#rep-form");
-                        const typ = form.type.value;
-                        const tit = form.title.value.trim();
-                        const pri = form.priority.value;
-                        if (!tit) {
-                            alert("Please enter a title.");
-                            return;
-                        }
-                        const newId = `${Math.floor(Math.random() * 90 + 10)}`;
-                        window.Store.set(s => {
-                            if (!s.performance_reports) s.performance_reports = [];
-                            s.performance_reports.unshift({
-                                id: newId,
-                                contract_id: contract.id,
-                                type: typ,
-                                title: tit,
-                                status: "Open",
-                                priority: pri,
-                                actions: "0/0",
-                                progress: 0,
-                                issue_date: new Date().toISOString().slice(0, 10),
-                                deadline: "2026-04-30",
-                                closed_date: "-"
-                            });
-                        });
-                        window.UI.toast({ kind: "success", title: "Report Submitted", body: `Report #${newId} logged.` });
-                        ov.remove();
-                        cb();
-                    }
-                }
-            ]
-        });
-    }
-
     return { render };
 })();
-

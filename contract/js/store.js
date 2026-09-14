@@ -4,7 +4,7 @@
    localStorage is a fast local cache.
    ============================================================ */
 (function () {
-    const KEY = "dmp_contract_state_v1";
+    const KEY = "dmp_contract_state_v2";
     let state = null;
     let loadedSavedAt = 0;
     const listeners = new Set();
@@ -186,6 +186,19 @@
     function performanceReportsByContract(cid) { return (state.performance_reports || []).filter(r => r.contract_id === cid); }
 
     function ctrRequests() { return state.ctr_requests || []; }
+    function ctrRequestById(id) {
+        if (!id) return null;
+        return (state.ctr_requests || []).find(r => r.id === String(id) || String(r.id) === String(id));
+    }
+    function ctrItemsByRequest(reqId) {
+        return (state.ctr_items || []).filter(i => String(i.request_id) === String(reqId));
+    }
+    function updateCtrItem(id, updates) {
+        set(s => {
+            const itm = (s.ctr_items || []).find(i => i.id === id);
+            if (itm) Object.assign(itm, updates);
+        });
+    }
     function notifications() { return state.notifications || []; }
 
     function addNotification(n) {
@@ -276,7 +289,7 @@
         lineItems, lineItemsByPricebook, lineItemById,
         kpis, kpisByContract,
         performanceReports, performanceReportsByContract,
-        ctrRequests, notifications,
+        ctrRequests, ctrRequestById, ctrItemsByRequest, updateCtrItem, notifications,
         addNotification, markAllNotificationsRead,
         persist, syncFromServer
     };

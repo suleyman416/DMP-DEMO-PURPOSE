@@ -28,11 +28,15 @@ window.UI = (function () {
         if (!root) return;
         if (root.__actHandler) root.removeEventListener("click", root.__actHandler);
         const handler = e => {
+            if (e.target.closest("input, select, textarea") && !e.target.closest("[data-act]")) {
+                return;
+            }
             const t = e.target.closest("[data-act]");
             if (!t || !root.contains(t)) return;
             const fn = map[t.getAttribute("data-act")];
             if (fn) {
                 e.preventDefault();
+                e.stopPropagation();
                 fn(t, e);
             }
         };

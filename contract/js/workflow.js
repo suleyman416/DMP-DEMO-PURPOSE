@@ -5,16 +5,21 @@ window.ContractWorkflow = (function () {
 
     function isCustomer(user) {
         if (!user) return true;
-        const r = (user.role || "").toLowerCase();
         const t = (user.type || "").toLowerCase();
-        return t === "customer" || r.includes("customer") || r.includes("procurement") || r.includes("cam") || r.includes("admin") && !r.includes("supplier");
+        if (t === "supplier") return false;
+        if (t === "customer") return true;
+        const r = (user.role || "").toLowerCase();
+        if (r.includes("supplier") || r.includes("vendor")) return false;
+        return r.includes("customer") || r.includes("procurement") || r.includes("cam") || r.includes("admin");
     }
 
     function isSupplier(user) {
         if (!user) return false;
-        const r = (user.role || "").toLowerCase();
         const t = (user.type || "").toLowerCase();
-        return t === "supplier" || r.includes("supplier") || r.includes("vendor");
+        if (t === "supplier") return true;
+        if (t === "customer") return false;
+        const r = (user.role || "").toLowerCase();
+        return r.includes("supplier") || r.includes("vendor");
     }
 
     function canCreateContract(user) {

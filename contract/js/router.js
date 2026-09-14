@@ -29,11 +29,18 @@ window.Router = (function () {
                 window.ContractEditView.render(root, parts[2]);
             } else if (parts[1] && parts[2] === "pricebooks" && parts[3]) {
                 window.PricebookDetailView.render(root, parts[1], parts[3]);
-            } else if (parts[1] && parts[2] === "pricebooks") {
-                const tab = queryParams.get("tab") || "pricebook";
-                window.ContractDetailView.render(root, parts[1], tab);
             } else if (parts[1]) {
-                const tab = queryParams.get("tab") || "pricebook";
+                const subtabMap = {
+                    "pricebooks": "pricebook",
+                    "pricebook": "pricebook",
+                    "supplier": "supplier",
+                    "kpi": "kpi",
+                    "kpis": "kpi",
+                    "performance": "performance",
+                    "dashboards": "dashboards",
+                    "dashboard": "dashboards"
+                };
+                const tab = subtabMap[parts[2]] || queryParams.get("tab") || "pricebook";
                 window.ContractDetailView.render(root, parts[1], tab);
             } else {
                 window.ContractsListView.render(root);
@@ -46,7 +53,13 @@ window.Router = (function () {
                 renderGlobalPricebooks(root);
             }
         } else if (base === "ctr-requests" || base === "requests") {
-            window.CTRRequestsView.render(root);
+            if (parts[1] && parts[2]) {
+                window.CTRDetailView.render(root, parts[2], parts[1]);
+            } else if (parts[1]) {
+                window.CTRDetailView.render(root, parts[1], "procurement");
+            } else {
+                window.CTRRequestsView.render(root);
+            }
         } else if (base === "spm") {
             window.SPMSuppliersView.render(root);
         } else {
