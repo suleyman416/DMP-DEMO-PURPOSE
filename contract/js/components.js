@@ -598,6 +598,103 @@ window.UI = (function () {
         });
     }
 
+    function showActionMenu(targetEl, items) {
+        document.querySelectorAll(".dmp-floating-action-menu").forEach(el => el.remove());
+        if (!targetEl || !items || items.length === 0) return;
+
+        const rect = targetEl.getBoundingClientRect();
+        const menu = document.createElement("div");
+        menu.className = "dmp-floating-action-menu ant-dropdown";
+        menu.style.position = "fixed";
+        menu.style.zIndex = "999999";
+        menu.style.background = "#FFFFFF";
+        menu.style.borderRadius = "8px";
+        menu.style.boxShadow = "0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)";
+        menu.style.border = "1px solid #F0F0F0";
+        menu.style.padding = "4px";
+        menu.style.minWidth = "180px";
+        menu.style.boxSizing = "border-box";
+
+        items.forEach(it => {
+            if (it.divider) {
+                const div = document.createElement("div");
+                div.style.height = "1px";
+                div.style.background = "#F3F4F6";
+                div.style.margin = "4px 0";
+                menu.appendChild(div);
+                return;
+            }
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "dmp-action-menu-item";
+            btn.style.display = "flex";
+            btn.style.alignItems = "center";
+            btn.style.gap = "8px";
+            btn.style.width = "100%";
+            btn.style.padding = "8px 12px";
+            btn.style.border = "none";
+            btn.style.background = "transparent";
+            btn.style.fontSize = "13px";
+            btn.style.fontWeight = "400";
+            btn.style.color = it.danger ? "#EF4444" : "#1F2937";
+            btn.style.borderRadius = "4px";
+            btn.style.cursor = "pointer";
+            btn.style.textAlign = "left";
+            btn.style.lineHeight = "1.4";
+            btn.style.transition = "background 0.15s, color 0.15s";
+
+            btn.onmouseenter = () => { btn.style.background = it.danger ? "#FEF2F2" : "#F3F4F6"; };
+            btn.onmouseleave = () => { btn.style.background = "transparent"; };
+
+            btn.innerHTML = `${it.icon ? `<span style="display:inline-flex;align-items:center;font-size:14px;">${it.icon}</span>` : ""}<span>${esc(it.label)}</span>`;
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                menu.remove();
+                if (typeof it.onClick === "function") it.onClick();
+            };
+            menu.appendChild(btn);
+        });
+
+        document.body.appendChild(menu);
+
+        const menuRect = menu.getBoundingClientRect();
+        let top = rect.bottom + 4;
+        let left = rect.right - menuRect.width;
+
+        if (top + menuRect.height > window.innerHeight - 10) {
+            top = Math.max(10, rect.top - menuRect.height - 4);
+        }
+        if (left + menuRect.width > window.innerWidth - 10) {
+            left = window.innerWidth - menuRect.width - 10;
+        }
+        if (left < 10) {
+            left = 10;
+        }
+
+        menu.style.top = `${top}px`;
+        menu.style.left = `${left}px`;
+
+        const closeMenu = (e) => {
+            if (e.type === "scroll" && menu.contains(e.target)) return;
+            if (!menu.contains(e.target) && e.target !== targetEl && !targetEl.contains(e.target)) {
+                menu.remove();
+                document.removeEventListener("click", closeMenu, true);
+                window.removeEventListener("resize", closeMenu);
+                window.removeEventListener("scroll", closeMenu);
+            }
+        };
+        const onHashChange = () => {
+            menu.remove();
+            window.removeEventListener("hashchange", onHashChange);
+        };
+        window.addEventListener("hashchange", onHashChange);
+        setTimeout(() => {
+            document.addEventListener("click", closeMenu, true);
+            window.addEventListener("resize", closeMenu);
+            window.addEventListener("scroll", closeMenu);
+        }, 120);
+    }
+
     return {
         esc,
         go,
@@ -617,6 +714,7 @@ window.UI = (function () {
         renderFeedbackBubble,
         openPhotoModal,
         emptyFolder,
-        openPricebookModal
+        openPricebookModal,
+        showActionMenu
     };
 })();

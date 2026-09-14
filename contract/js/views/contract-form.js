@@ -44,7 +44,7 @@ window.ContractFormView = (function () {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="searchIcon-RowzYk">
                                         <path fill="currentColor" d="M4.5 10a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0M10 3a7 7 0 1 0 4.391 12.452l5.329 5.328a.75.75 0 1 0 1.06-1.06l-5.328-5.329A7 7 0 0 0 10 3"></path>
                                     </svg>
-                                    <input placeholder="Search supplier" name="supplier" data-testid="contracts-create-supplier-autocomplete-input" class="autocomplete-wkwDMM" list="suppliers-datalist" value="${existingSuppliers[0] || "MRO AISEL"}" required>
+                                    <input placeholder="Search supplier" name="supplier" data-testid="contracts-create-supplier-autocomplete-input" class="autocomplete-wkwDMM" list="suppliers-datalist" value="" required>
                                     <datalist id="suppliers-datalist">
                                         ${existingSuppliers.map(s => `<option value="${window.UI.esc(s)}"></option>`).join("")}
                                     </datalist>
@@ -56,7 +56,7 @@ window.ContractFormView = (function () {
                         <div class="form-group">
                             <label class="label-ZMZNIV">Supplier ID</label>
                             <div class="container-FyufBC">
-                                <input class="input-YKgOhO" placeholder="Enter supplier ID" disabled="" id="supplier-id-input" data-testid="contracts-create-supplier-id" type="text" value="SUP-001">
+                                <input class="input-YKgOhO" placeholder="Enter supplier ID" disabled="" id="supplier-id-input" data-testid="contracts-create-supplier-id" type="text" value="">
                             </div>
                         </div>
 
@@ -68,7 +68,7 @@ window.ContractFormView = (function () {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="searchIcon-RowzYk">
                                         <path fill="currentColor" d="M4.5 10a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0M10 3a7 7 0 1 0 4.391 12.452l5.329 5.328a.75.75 0 1 0 1.06-1.06l-5.328-5.329A7 7 0 0 0 10 3"></path>
                                     </svg>
-                                    <input placeholder="Search contract owner" name="procurement_contract_owner" data-testid="contracts-create-contract-owner-autocomplete-input" class="autocomplete-wkwDMM" type="text" value="${window.UI.esc(me.name)}" required>
+                                    <input placeholder="Search contract owner" name="procurement_contract_owner" data-testid="contracts-create-contract-owner-autocomplete-input" class="autocomplete-wkwDMM" type="text" value="" required>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +77,7 @@ window.ContractFormView = (function () {
                         <div class="form-group">
                             <label class="label-ZMZNIV required-uOw3_8">External contract #</label>
                             <div class="container-FyufBC">
-                                <input class="input-YKgOhO" placeholder="Enter contract number" name="external_id" data-testid="contracts-create-external-id" type="text" value="${Math.floor(Math.random() * 899999 + 100000)}" required>
+                                <input class="input-YKgOhO" placeholder="Enter contract number" name="external_id" data-testid="contracts-create-external-id" type="text" value="" required>
                             </div>
                         </div>
 
@@ -88,7 +88,7 @@ window.ContractFormView = (function () {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="searchIcon-RowzYk">
                                         <path fill="currentColor" d="M4.5 10a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0M10 3a7 7 0 1 0 4.391 12.452l5.329 5.328a.75.75 0 1 0 1.06-1.06l-5.328-5.329A7 7 0 0 0 10 3"></path>
                                     </svg>
-                                    <input placeholder="Search CAM" name="cam_name" data-testid="contracts-create-cam-autocomplete-input" class="autocomplete-wkwDMM" type="text" value="${me.name === "Demo Customer" ? "Aisel Verdieva" : me.name}" required>
+                                    <input placeholder="Search CAM" name="cam_name" data-testid="contracts-create-cam-autocomplete-input" class="autocomplete-wkwDMM" type="text" value="" required>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +96,7 @@ window.ContractFormView = (function () {
                         <div class="form-group">
                             <label class="label-ZMZNIV required-uOw3_8">Contract description</label>
                             <div class="container-FyufBC">
-                                <input class="input-YKgOhO" placeholder="Enter contract description" name="description" data-testid="contracts-create-description" type="text" value="Valve & Piping Framework Agreement" required>
+                                <input class="input-YKgOhO" placeholder="Enter contract description" name="description" data-testid="contracts-create-description" type="text" value="" required>
                             </div>
                         </div>
 
@@ -104,7 +104,7 @@ window.ContractFormView = (function () {
                         <div class="form-group">
                             <label class="label-ZMZNIV required-uOw3_8">Contract start date</label>
                             <div class="datepicker-t5AVY9" data-testid="contracts-create-start-date">
-                                <input type="text" name="valid_from" data-testid="contracts-create-start-date-input" value="2026-04-27" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
+                                <input type="text" name="valid_from" data-testid="contracts-create-start-date-input" value="" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
                                 </svg>
@@ -114,7 +114,7 @@ window.ContractFormView = (function () {
                         <div class="form-group">
                             <label class="label-ZMZNIV required-uOw3_8">Contract end date</label>
                             <div class="datepicker-t5AVY9" data-testid="contracts-create-end-date">
-                                <input type="text" name="valid_to" data-testid="contracts-create-end-date-input" value="2027-04-27" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
+                                <input type="text" name="valid_to" data-testid="contracts-create-end-date-input" value="" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
                                 </svg>
@@ -124,7 +124,7 @@ window.ContractFormView = (function () {
                         <div class="form-group">
                             <label class="label-ZMZNIV required-uOw3_8">Contract approved value</label>
                             <div class="container-FyufBC">
-                                <input class="input-YKgOhO" placeholder="Enter value" name="approved_value" data-testid="contracts-create-approved-value" type="number" step="0.01" value="18990" required>
+                                <input class="input-YKgOhO" placeholder="Enter value" name="approved_value" data-testid="contracts-create-approved-value" type="number" step="0.01" value="" required>
                             </div>
                         </div>
 
@@ -133,13 +133,14 @@ window.ContractFormView = (function () {
                             <label class="label-ZMZNIV required-uOw3_8">Region</label>
                             <div class="ant-select select-l8uECl" data-testid="contracts-create-region">
                                 <select name="region" required>
-                                    <option value="ANG" selected>ANG</option>
+                                    <option value="" selected disabled>Select region</option>
+                                    <option value="ANG">ANG</option>
                                     <option value="AGT">AGT</option>
                                     <option value="AME">AME</option>
                                     <option value="APAC">APAC</option>
                                     <option value="EMEA">EMEA</option>
                                 </select>
-                                <span class="ant-select-selection-item">ANG</span>
+                                <span class="ant-select-selection-item">Select region</span>
                                 <span class="ant-select-arrow">
                                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -152,15 +153,15 @@ window.ContractFormView = (function () {
                             <label class="label-ZMZNIV">Department</label>
                             <div class="ant-select select-l8uECl" data-testid="contracts-create-department">
                                 <select name="department_name">
-                                    <option value="">Select department</option>
-                                    <option value="Risk Management" selected>Risk Management</option>
+                                    <option value="" selected disabled>Select department</option>
+                                    <option value="Risk Management">Risk Management</option>
                                     <option value="Maintenance & Reliability">Maintenance & Reliability</option>
                                     <option value="Drilling Operations">Drilling Operations</option>
                                     <option value="Mechanical & Piping">Mechanical & Piping</option>
                                     <option value="Electrical & Instrumentation">Electrical & Instrumentation</option>
                                     <option value="HSE & General Services">HSE & General Services</option>
                                 </select>
-                                <span class="ant-select-selection-item">Risk Management</span>
+                                <span class="ant-select-selection-item">Select department</span>
                                 <span class="ant-select-arrow">
                                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>

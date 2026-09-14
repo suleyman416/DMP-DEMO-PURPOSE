@@ -203,7 +203,7 @@ window.ContractsListView = (function () {
                                         <td>
                                             <span class="st-row"><span class="st-dot ${dotClass}"></span>${window.UI.esc(st)}</span>
                                         </td>
-                                        <td onclick="event.stopPropagation();" style="text-align:right;">
+                                        <td style="text-align:right;">
                                             <button class="icon-btn" data-act="ctr-options" data-id="${c.id}" style="display:inline-flex;padding:6px;font-size:16px;" title="Actions">
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                                             </button>
@@ -358,21 +358,45 @@ window.ContractsListView = (function () {
             },
             "ctr-options": (t) => {
                 const id = t.getAttribute("data-id");
-                window.UI.openModal({
-                    title: "Contract Actions (" + id + ")",
-                    bodyHtml: `
-                        <div style="display:flex;flex-direction:column;gap:12px;">
-                            <button class="btn btn-outline" style="text-align:left;padding:12px 16px;" onclick="window.location.hash='#/contracts/${id}';window.UI.closeModals();">
-                                <strong>View Contract Details</strong>
-                                <div style="font-size:12px;color:#6B7280;">Inspect pricebooks, KPIs, SPM supplier data, and reports</div>
-                            </button>
-                            <button class="btn btn-outline" style="text-align:left;padding:12px 16px;" onclick="window.ContractsListView.toggleContractStatus('${id}');window.UI.closeModals();">
-                                <strong>Toggle Contract Status</strong>
-                                <div style="font-size:12px;color:#6B7280;">Switch between Active and Disabled/Expired</div>
-                            </button>
-                        </div>`,
-                    buttons: [{ label: "Close", cls: "btn-black", onClick: ov => ov.remove() }]
-                });
+                const c = (window.Store.contracts() || []).find(x => x.id === id);
+                if (!c) return;
+                const isAct = (c.status || "Active") === "Active";
+                window.UI.showActionMenu(t, [
+                    {
+                        label: "View contract details",
+                        icon: "📄",
+                        onClick: () => { window.location.hash = "#/contracts/" + id; }
+                    },
+                    {
+                        label: "Download contract (PDF)",
+                        icon: "📥",
+                        onClick: () => {
+                            window.UI.toast({ kind: "success", title: "PDF Export", body: `Downloading signed agreement for Contract ${id}...` });
+                        }
+                    },
+                    {
+                        label: isAct ? "Deactivate contract" : "Activate contract",
+                        icon: isAct ? "🚫" : "✅",
+                        danger: isAct,
+                        onClick: () => {
+                            toggleContractStatus(id);
+                        }
+                    },
+                    {
+                        label: "Delete contract",
+                        icon: "🗑️",
+                        danger: true,
+                        onClick: () => {
+                            if (confirm(`Are you sure you want to delete Contract ${id}? This action cannot be undone.`)) {
+                                window.Store.set(s => {
+                                    s.contracts = (s.contracts || []).filter(x => x.id !== id);
+                                });
+                                window.UI.toast({ kind: "info", title: "Contract Removed", body: `Contract ${id} has been deleted.` });
+                                render(root);
+                            }
+                        }
+                    }
+                ]);
             }
         });
     }

@@ -828,6 +828,48 @@ window.ContractDetailView = (function () {
             "create-pricebook": () => window.UI.openPricebookModal({ contract, onSuccess: () => render(root, contractId, "pricebook") }),
             "create-kpi": () => openCreateKPIModal(contract, () => render(root, contractId, "kpi")),
             "create-report": () => openCreateReportModal(contract, () => render(root, contractId, "performance")),
+            "pb-menu-toggle": (t) => {
+                const pbId = t.getAttribute("data-id");
+                const pb = (window.Store.pricebooks() || []).find(p => p.id === pbId);
+                if (!pb) return;
+                const isAct = (pb.status || "Active") === "Active";
+                window.UI.showActionMenu(t, [
+                    {
+                        label: "View pricebook items",
+                        icon: "📄",
+                        onClick: () => { window.location.hash = `#/contracts/${contract.id}/pricebooks/${pb.id}`; }
+                    },
+                    {
+                        label: "Edit pricebook",
+                        icon: "✏️",
+                        onClick: () => {
+                            const newDesc = prompt("Update pricebook description:", pb.description);
+                            if (newDesc && newDesc.trim()) {
+                                window.Store.updatePricebook(pb.id, { description: newDesc.trim() });
+                                window.UI.toast({ kind: "success", title: "Pricebook Updated", body: "Description updated successfully." });
+                                render(root, contractId, activeTab);
+                            }
+                        }
+                    },
+                    {
+                        label: "Export items (CSV)",
+                        icon: "📥",
+                        onClick: () => {
+                            window.UI.toast({ kind: "success", title: "Export Started", body: `Exporting items for Pricebook #${pb.pricebook_number || pb.id}...` });
+                        }
+                    },
+                    {
+                        label: isAct ? "Disable pricebook" : "Activate pricebook",
+                        icon: isAct ? "🚫" : "✅",
+                        danger: isAct,
+                        onClick: () => {
+                            window.Store.updatePricebook(pb.id, { status: isAct ? "Disabled" : "Active" });
+                            window.UI.toast({ kind: "info", title: "Status Changed", body: `Pricebook is now ${isAct ? "Disabled" : "Active"}.` });
+                            render(root, contractId, activeTab);
+                        }
+                    }
+                ]);
+            },
             "edit-kpi-cell": (t) => {
                 const kpiId = t.getAttribute("data-kpi");
                 const monthIdx = parseInt(t.getAttribute("data-month"), 10);
@@ -848,123 +890,191 @@ window.ContractDetailView = (function () {
                 }
             }
         });
+
+        // Sidebar minimize toggle (<< / >>)
+        root.querySelectorAll(".filterArrow-jGyFr7").forEach(arrow => {
+            arrow.style.cursor = "pointer";
+            arrow.onclick = (e) => {
+                e.stopPropagation();
+                const aside = arrow.closest("aside.sidebar-AY7Hhf");
+                if (aside) {
+                    const isMin = aside.getAttribute("data-minimized") === "true";
+                    aside.setAttribute("data-minimized", isMin ? "false" : "true");
+                    aside.style.width = isMin ? "260px" : "44px";
+                }
+            };
+        });
     }
 
     /* Helper Modals */
     function openCreatePricebookModal(contract, cb) {
-        window.UI.openModal({
-            title: `Create New Pricebook — ${contract.id}`,
-            bodyHtml: `
-                <form id="pb-form" class="formGrid-PTja0j" style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="grid-column: span 2;">
-                        <label class="label-uhdLaM">Pricebook Description <span style="color:#EF4444;">*</span></label>
-                        <input type="text" class="input-YKgOhO w-full" name="description" placeholder="e.g. Moulded case circuit breaker" required>
-                    </div>
-                    <div>
-                        <label class="label-uhdLaM">External Pricebook Number <span style="color:#EF4444;">*</span></label>
-                        <input type="text" class="input-YKgOhO w-full" name="external_pricebook_number" placeholder="1234512" required>
-                    </div>
-                    <div>
-                        <label class="label-uhdLaM">Currency <span style="color:#EF4444;">*</span></label>
-                        <select class="input-YKgOhO w-full" name="currency">
-                            <option value="USD">USD</option>
-                            <option value="EUR">EUR</option>
-                            <option value="AZN">AZN</option>
-                        </select>
-                    </div>
-                </form>
-            `,
-            buttons: [
-                { label: "Cancel", cls: "button-z6sbMq solid-qA3WwL", onClick: ov => ov.remove() },
-                {
-                    label: "Create Pricebook",
-                    cls: "button-z6sbMq solid-qA3WwL primary-wQbOYq",
-                    onClick: ov => {
-                        const form = ov.querySelector("#pb-form");
-                        const desc = form.description.value.trim();
-                        const ext = form.external_pricebook_number.value.trim();
-                        const cur = form.currency.value;
-                        if (!desc || !ext) {
-                            alert("Please fill in all required fields.");
-                            return;
-                        }
-                        const newId = "PB-" + Date.now().toString(36).toUpperCase();
-                        window.Store.set(s => {
-                            if (!s.pricebooks) s.pricebooks = [];
-                            s.pricebooks.push({
-                                id: newId,
-                                contract_id: contract.id,
-                                pricebook_number: `PB-${(s.pricebooks.length + 1).toString().padStart(3, "0")}`,
-                                external_pricebook_number: ext,
-                                description: desc,
-                                currency: cur,
-                                status: "Active",
-                                items_count: 181,
-                                created_at: new Date().toISOString().slice(0, 10)
-                            });
-                            contract.pricebook_count = (contract.pricebook_count || 0) + 1;
-                        });
-                        window.UI.toast({ kind: "success", title: "Pricebook Created", body: `Pricebook ${ext} successfully added.` });
-                        ov.remove();
-                        cb();
-                    }
-                }
-            ]
-        });
+        window.UI.openPricebookModal({ contract, onSuccess: cb });
     }
 
     function openCreateKPIModal(contract, cb) {
-        window.UI.openModal({
-            title: `Create Service Level KPI`,
-            bodyHtml: `
-                <form id="kpi-form" style="display:flex; flex-direction:column; gap: 14px;">
-                    <div>
-                        <label class="label-uhdLaM">KPI Name <span style="color:#EF4444;">*</span></label>
-                        <input type="text" class="input-YKgOhO w-full" name="kpi_name" placeholder="e.g. On-time delivery" required>
+        const modalHtml = `
+            <div class="dmp-modal-backdrop" id="kpi-modal-backdrop" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;">
+                <div class="dmp-modal-box" style="background:#FFF;border-radius:10px;width:640px;max-width:94vw;box-shadow:0 12px 36px rgba(0,0,0,0.18);padding:24px 30px;position:relative;max-height:92vh;overflow-y:auto;box-sizing:border-box;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                        <h2 style="font-size:18px;font-weight:600;color:#111827;margin:0;">Add New KPI</h2>
+                        <button type="button" id="kpi-modal-close" style="background:none;border:none;font-size:22px;cursor:pointer;color:#6B7280;line-height:1;padding:0 4px;">✕</button>
                     </div>
-                    <div>
-                        <label class="label-uhdLaM">Target / Agreed Value <span style="color:#EF4444;">*</span></label>
-                        <input type="number" step="0.1" class="input-YKgOhO w-full" name="target_agreed" placeholder="5.0" required>
-                    </div>
-                    <div>
-                        <label class="label-uhdLaM">Unit</label>
-                        <input type="text" class="input-YKgOhO w-full" name="unit" placeholder="%, days" value="%">
-                    </div>
-                </form>
-            `,
-            buttons: [
-                { label: "Cancel", cls: "button-z6sbMq solid-qA3WwL", onClick: ov => ov.remove() },
-                {
-                    label: "Add KPI",
-                    cls: "button-z6sbMq solid-qA3WwL primary-wQbOYq",
-                    onClick: ov => {
-                        const form = ov.querySelector("#kpi-form");
-                        const name = form.kpi_name.value.trim();
-                        const tgt = parseFloat(form.target_agreed.value);
-                        const unit = form.unit.value.trim();
-                        if (!name || isNaN(tgt)) {
-                            alert("Please fill in valid KPI details.");
-                            return;
-                        }
-                        const newId = "kpi_" + Date.now().toString(36);
-                        window.Store.set(s => {
-                            if (!s.kpis) s.kpis = [];
-                            s.kpis.push({
-                                id: newId,
-                                contract_id: contract.id,
-                                kpi_name: name,
-                                target_agreed: tgt,
-                                unit: unit,
-                                monthly_values: [null, null, null, null, null, null, null, null, null, null, null, null]
-                            });
-                        });
-                        window.UI.toast({ kind: "success", title: "KPI Added", body: `Assigned KPI: ${name}` });
-                        ov.remove();
-                        cb();
-                    }
-                }
-            ]
-        });
+                    <form id="kpi-create-form">
+                        <div style="margin-bottom:18px;">
+                            <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;"><span style="color:#EF4444;margin-right:2px;">*</span>KPI Category</label>
+                            <select id="kpi-category" required style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;background:#FFF;color:#111827;outline:none;">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Delivery">Delivery</option>
+                                <option value="Quality">Quality</option>
+                                <option value="Commercial">Commercial</option>
+                                <option value="Safety">Safety</option>
+                                <option value="Compliance">Compliance</option>
+                                <option value="Operational">Operational</option>
+                            </select>
+                            <div style="font-size:11px;color:#8C8C8C;margin-top:4px;">Configured by admin</div>
+                        </div>
+
+                        <div style="margin-bottom:18px;">
+                            <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;"><span style="color:#EF4444;margin-right:2px;">*</span>KPI Subcategory</label>
+                            <select id="kpi-subcategory" required style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;background:#FFF;color:#111827;outline:none;">
+                                <option value="" disabled selected>Select</option>
+                                <option value="On-time delivery">On-time delivery</option>
+                                <option value="Order accuracy">Order accuracy</option>
+                                <option value="Defect rate">Defect rate</option>
+                                <option value="Specification compliance">Specification compliance</option>
+                                <option value="Lead time adherence">Lead time adherence</option>
+                                <option value="Invoice accuracy">Invoice accuracy</option>
+                                <option value="Response time">Response time</option>
+                            </select>
+                            <div style="font-size:11px;color:#8C8C8C;margin-top:4px;">Configured by admin</div>
+                        </div>
+
+                        <div style="margin-bottom:20px;">
+                            <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;"><span style="color:#EF4444;margin-right:2px;">*</span>KPI Range</label>
+                            <div style="border:1px solid #E5E7EB;border-radius:8px;padding:16px;background:#FFF;display:flex;flex-direction:column;gap:14px;">
+                                <!-- Row 1: Low Score -->
+                                <div style="display:grid;grid-template-columns:140px 1fr 1fr;gap:16px;align-items:flex-end;">
+                                    <div>
+                                        <div style="display:flex;align-items:center;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;background:#FFF;color:#374151;gap:6px;">
+                                            <span style="color:#EF4444;font-size:14px;">●</span>
+                                            <span style="flex:1;">Low Score</span>
+                                            <span style="color:#9CA3AF;font-size:11px;">⌵</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="display:block;font-size:11.5px;font-weight:500;color:#374151;margin-bottom:4px;">Min value</label>
+                                        <input type="number" id="kpi-low-min" value="0" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;box-sizing:border-box;" />
+                                    </div>
+                                    <div>
+                                        <label style="display:block;font-size:11.5px;font-weight:500;color:#374151;margin-bottom:4px;">Max value</label>
+                                        <input type="number" id="kpi-low-max" value="55" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;box-sizing:border-box;" />
+                                    </div>
+                                </div>
+
+                                <!-- Row 2: Middle Score -->
+                                <div style="display:grid;grid-template-columns:140px 1fr 1fr;gap:16px;align-items:flex-end;">
+                                    <div>
+                                        <div style="display:flex;align-items:center;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;background:#FFF;color:#374151;gap:6px;">
+                                            <span style="color:#F59E0B;font-size:14px;">●</span>
+                                            <span style="flex:1;">Middle Score</span>
+                                            <span style="color:#9CA3AF;font-size:11px;">⌵</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="display:block;font-size:11.5px;font-weight:500;color:#374151;margin-bottom:4px;">Min value</label>
+                                        <input type="number" id="kpi-mid-min" value="56" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;box-sizing:border-box;" />
+                                    </div>
+                                    <div>
+                                        <label style="display:block;font-size:11.5px;font-weight:500;color:#374151;margin-bottom:4px;">Max value</label>
+                                        <input type="number" id="kpi-mid-max" value="75" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;box-sizing:border-box;" />
+                                    </div>
+                                </div>
+
+                                <!-- Row 3: High Score -->
+                                <div style="display:grid;grid-template-columns:140px 1fr 1fr;gap:16px;align-items:flex-end;">
+                                    <div>
+                                        <div style="display:flex;align-items:center;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;background:#FFF;color:#374151;gap:6px;">
+                                            <span style="color:#10B981;font-size:14px;">●</span>
+                                            <span style="flex:1;">High Score</span>
+                                            <span style="color:#9CA3AF;font-size:11px;">⌵</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="display:block;font-size:11.5px;font-weight:500;color:#374151;margin-bottom:4px;">Min value</label>
+                                        <input type="number" id="kpi-high-min" value="76" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;box-sizing:border-box;" />
+                                    </div>
+                                    <div>
+                                        <label style="display:block;font-size:11.5px;font-weight:500;color:#374151;margin-bottom:4px;">Max value</label>
+                                        <input type="number" id="kpi-high-max" value="100" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;box-sizing:border-box;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom:24px;">
+                            <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;"><span style="color:#EF4444;margin-right:2px;">*</span>Description</label>
+                            <textarea id="kpi-description" required placeholder="Provide a detailed description of this KPI and what it measures..." style="width:100%;height:78px;padding:10px 12px;border:1px solid #D9D9D9;border-radius:6px;font-family:inherit;font-size:13px;resize:vertical;box-sizing:border-box;color:#111827;"></textarea>
+                        </div>
+
+                        <div style="display:flex;justify-content:flex-end;gap:12px;">
+                            <button type="button" id="kpi-cancel-btn" style="height:38px;padding:0 20px;border:1px solid #D9D9D9;background:#FFF;color:#374151;border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;">Cancel</button>
+                            <button type="submit" style="height:38px;padding:0 20px;border:none;background:#111827;color:#FFF;border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;">Create KPI</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+
+        const div = document.createElement("div");
+        div.id = "kpi-modal-container";
+        div.innerHTML = modalHtml;
+        document.body.appendChild(div);
+
+        const close = () => { div.remove(); };
+        div.querySelector("#kpi-modal-close").onclick = close;
+        div.querySelector("#kpi-cancel-btn").onclick = close;
+        div.querySelector("#kpi-modal-backdrop").onclick = e => { if (e.target.id === "kpi-modal-backdrop") close(); };
+
+        div.querySelector("#kpi-create-form").onsubmit = e => {
+            e.preventDefault();
+            const cat = div.querySelector("#kpi-category").value;
+            const sub = div.querySelector("#kpi-subcategory").value;
+            const desc = div.querySelector("#kpi-description").value.trim();
+            const lowMin = parseFloat(div.querySelector("#kpi-low-min").value) || 0;
+            const lowMax = parseFloat(div.querySelector("#kpi-low-max").value) || 55;
+            const midMin = parseFloat(div.querySelector("#kpi-mid-min").value) || 56;
+            const midMax = parseFloat(div.querySelector("#kpi-mid-max").value) || 75;
+            const highMin = parseFloat(div.querySelector("#kpi-high-min").value) || 76;
+            const highMax = parseFloat(div.querySelector("#kpi-high-max").value) || 100;
+
+            if (!cat || !sub || !desc) {
+                alert("Please complete all required fields marked with *.");
+                return;
+            }
+
+            const newId = "kpi_" + Date.now().toString(36);
+            window.Store.set(s => {
+                if (!s.kpis) s.kpis = [];
+                s.kpis.push({
+                    id: newId,
+                    contract_id: contract.id,
+                    kpi_name: sub,
+                    category: cat,
+                    description: desc,
+                    target_agreed: highMin,
+                    unit: "%",
+                    ranges: {
+                        low: [lowMin, lowMax],
+                        middle: [midMin, midMax],
+                        high: [highMin, highMax]
+                    },
+                    monthly_values: [null, null, null, null, null, null, null, null, null, null, null, null]
+                });
+            });
+            window.UI.toast({ kind: "success", title: "KPI Created", body: `Assigned KPI: ${sub} (${cat})` });
+            close();
+            cb();
+        };
     }
 
     function openCreateReportModal(contract, cb) {

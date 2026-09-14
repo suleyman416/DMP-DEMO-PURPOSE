@@ -14,6 +14,9 @@ window.Router = (function () {
         const root = document.getElementById("view");
         if (!root) return;
 
+        // Clean up floating action menus / popovers on navigation
+        document.querySelectorAll(".dmp-floating-action-menu").forEach(el => el.remove());
+
         const { parts, queryParams } = parseHash();
         const base = parts[0] || "contracts";
 

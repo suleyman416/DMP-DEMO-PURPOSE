@@ -200,7 +200,7 @@ window.CTRRequestsView = (function () {
                                         <td style="font-weight:600;">${window.UI.esc(isCust ? r.supplier : (r.customer || "Delta Drilling LTD."))}</td>
                                         <td>${window.UI.esc(r.created_at || "2026-05-25")}</td>
                                         ${isCust ? `
-                                        <td onclick="event.stopPropagation();" style="text-align:right;">
+                                        <td style="text-align:right;">
                                             <button class="icon-btn" data-act="ctr-req-options" data-id="${r.id}" style="display:inline-flex;padding:6px;font-size:16px;" title="Actions">
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                                             </button>
@@ -337,21 +337,48 @@ window.CTRRequestsView = (function () {
             },
             "ctr-req-options": (t) => {
                 const id = t.getAttribute("data-id");
-                window.UI.openModal({
-                    title: "CTR Request Options (" + id + ")",
-                    bodyHtml: `
-                        <div style="display:flex;flex-direction:column;gap:12px;">
-                            <button class="btn btn-outline" style="text-align:left;padding:12px 16px;" onclick="window.UI.closeModals();window.UI.toast({kind:'info',title:'CTR Inspected',body:'Request ${id} details reviewed.'});">
-                                <strong>View Full Request Spec</strong>
-                                <div style="font-size:12px;color:#6B7280;">Inspect justification, line items, and audit trail</div>
-                            </button>
-                            <button class="btn btn-outline" style="text-align:left;padding:12px 16px;" onclick="window.UI.closeModals();window.UI.toast({kind:'success',title:'Status Updated',body:'Request ${id} accepted.'});">
-                                <strong>Approve Change Request</strong>
-                                <div style="font-size:12px;color:#6B7280;">Approve price changes into active master pricebook</div>
-                            </button>
-                        </div>`,
-                    buttons: [{ label: "Close", cls: "btn-black", onClick: ov => ov.remove() }]
-                });
+                const r = (window.Store.get().ctr_requests || []).find(x => x.id === id);
+                window.UI.showActionMenu(t, [
+                    {
+                        label: "View request spec",
+                        icon: "📄",
+                        onClick: () => {
+                            window.UI.toast({ kind: "info", title: "CTR Request", body: `Viewing request specification for ${id}` });
+                        }
+                    },
+                    {
+                        label: "Approve change request",
+                        icon: "✅",
+                        onClick: () => {
+                            window.Store.set(s => {
+                                const target = (s.ctr_requests || []).find(x => x.id === id);
+                                if (target) target.status = "Approved";
+                            });
+                            window.UI.toast({ kind: "success", title: "Status Updated", body: `Request ${id} approved.` });
+                            render(root);
+                        }
+                    },
+                    {
+                        label: "Reject request",
+                        icon: "🚫",
+                        danger: true,
+                        onClick: () => {
+                            window.Store.set(s => {
+                                const target = (s.ctr_requests || []).find(x => x.id === id);
+                                if (target) target.status = "Rejected";
+                            });
+                            window.UI.toast({ kind: "info", title: "Status Updated", body: `Request ${id} rejected.` });
+                            render(root);
+                        }
+                    },
+                    {
+                        label: "Download CTR PDF",
+                        icon: "📥",
+                        onClick: () => {
+                            window.UI.toast({ kind: "success", title: "Download Started", body: `Downloading specification PDF for ${id}...` });
+                        }
+                    }
+                ]);
             }
         });
     }
@@ -390,7 +417,7 @@ window.CTRRequestsView = (function () {
                         </div>
                         <div>
                             <label class="label-uhdLaM" style="font-size:13px; font-weight:500; color:#374151; margin-bottom:6px; display:block;">Submission Deadline</label>
-                            <input type="date" class="input-YKgOhO w-full" name="submission_deadline" value="2026-06-30" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:4px;" />
+                            <input type="date" class="input-YKgOhO w-full" name="submission_deadline" value="" placeholder="YYYY-MM-DD" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:4px;" />
                         </div>
                     </div>
 

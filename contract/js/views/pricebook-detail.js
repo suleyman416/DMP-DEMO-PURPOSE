@@ -978,49 +978,71 @@ window.PricebookDetailView = (function () {
 
                 const me = window.Store.currentUser();
                 const isCust = window.ContractWorkflow.isCustomer(me);
-
                 const currentStatus = (it.status || "").toLowerCase();
-                const newStatusAction = currentStatus === "approved" ? "Disable item" : "Approve item";
+                const isApproved = currentStatus === "approved";
 
-                const choice = prompt(`Actions for Part ${it.supplier_part_no} (${it.customer_short_description}):\n1. ${newStatusAction}\n2. Request CTR Price Revision\n3. View Technical Datasheet\n\nEnter number (1-3):`, "1");
-
-                if (choice === "1") {
-                    window.Store.set(s => {
-                        const target = (s.line_items || []).find(x => x.id === id);
-                        if (target) {
-                            target.status = currentStatus === "approved" ? "Disabled" : "Approved";
-                        }
-                    });
-                    window.UI.toast({ kind: "success", title: "Item Status Updated", body: `Item set to ${currentStatus === "approved" ? "Disabled" : "Approved"}.` });
-                    rerender();
-                } else if (choice === "2") {
-                    const newPrice = prompt(`Enter new requested unit price (Current: $${it.unit_price}):`, it.unit_price);
-                    if (newPrice && !isNaN(parseFloat(newPrice))) {
-                        const np = parseFloat(newPrice);
-                        window.Store.set(s => {
-                            if (!s.ctr_requests) s.ctr_requests = [];
-                            s.ctr_requests.push({
-                                id: "CTR-REQ-" + Date.now().toString(36).toUpperCase(),
-                                contract_id: contract ? contract.id : pricebook.contract_id,
-                                pricebook_id: pricebook.id,
-                                item_id: it.id,
-                                item_desc: it.customer_short_description,
-                                supplier: contract ? contract.supplier : me.company,
-                                request_type: "Price Revision Request",
-                                requested_by: me.name,
-                                current_price: it.unit_price,
-                                requested_price: np,
-                                currency: it.currency || pricebook.currency || "USD",
-                                justification: "Submitted via Pricebook Item portal.",
-                                status: "Pending Review",
-                                created_at: new Date().toISOString().slice(0, 10)
+                window.UI.showActionMenu(btn, [
+                    {
+                        label: isApproved ? "Disable item" : "Approve item",
+                        icon: isApproved ? "🚫" : "✅",
+                        danger: isApproved,
+                        onClick: () => {
+                            window.Store.set(s => {
+                                const target = (s.line_items || []).find(x => x.id === id);
+                                if (target) {
+                                    target.status = isApproved ? "Disabled" : "Approved";
+                                }
                             });
-                        });
-                        window.UI.toast({ kind: "success", title: "CTR Request Submitted", body: "Submitted price revision request to procurement." });
+                            window.UI.toast({ kind: "success", title: "Item Status Updated", body: `Item set to ${isApproved ? "Disabled" : "Approved"}.` });
+                            rerender();
+                        }
+                    },
+                    {
+                        label: "Request CTR price revision",
+                        icon: "📝",
+                        onClick: () => {
+                            const newPrice = prompt(`Enter new requested unit price (Current: $${it.unit_price}):`, it.unit_price);
+                            if (newPrice && !isNaN(parseFloat(newPrice))) {
+                                const np = parseFloat(newPrice);
+                                window.Store.set(s => {
+                                    if (!s.ctr_requests) s.ctr_requests = [];
+                                    s.ctr_requests.push({
+                                        id: "CTR-REQ-" + Date.now().toString(36).toUpperCase(),
+                                        contract_id: contract ? contract.id : pricebook.contract_id,
+                                        pricebook_id: pricebook.id,
+                                        item_id: it.id,
+                                        item_desc: it.customer_short_description,
+                                        supplier: contract ? contract.supplier : me.company,
+                                        request_type: "Price Revision Request",
+                                        requested_by: me.name,
+                                        current_price: it.unit_price,
+                                        requested_price: np,
+                                        currency: it.currency || pricebook.currency || "USD",
+                                        justification: "Submitted via Pricebook Item portal.",
+                                        status: "Pending Review",
+                                        created_at: new Date().toISOString().slice(0, 10)
+                                    });
+                                });
+                                window.UI.toast({ kind: "success", title: "CTR Request Submitted", body: "Submitted price revision request to procurement." });
+                            }
+                        }
+                    },
+                    {
+                        label: "View technical datasheet",
+                        icon: "📑",
+                        onClick: () => {
+                            window.UI.toast({ kind: "info", title: "Datasheet", body: `Viewing technical datasheet for Part #${it.supplier_part_no}` });
+                        }
+                    },
+                    {
+                        label: "Copy part number",
+                        icon: "📋",
+                        onClick: () => {
+                            navigator.clipboard?.writeText(it.supplier_part_no);
+                            window.UI.toast({ kind: "success", title: "Copied", body: `Part number ${it.supplier_part_no} copied to clipboard.` });
+                        }
                     }
-                } else if (choice === "3") {
-                    alert(`Opening Technical Datasheet for Part ${it.supplier_part_no}`);
-                }
+                ]);
             });
         });
 
