@@ -180,10 +180,150 @@
     function lineItemById(id) { return (state.line_items || []).find(i => i.id === id); }
 
     function kpis() { return state.kpis || []; }
-    function kpisByContract(cid) { return (state.kpis || []).filter(k => k.contract_id === cid); }
+    function kpiById(id) {
+        if (!id) return null;
+        return (state.kpis || []).find(k => k.id === String(id) || String(k.id) === String(id));
+    }
+    function kpisByContract(cid) {
+        const c = contractById(cid);
+        const targetCid = c ? c.id : cid;
+        const list = (state.kpis || []).filter(k => k.contract_id === targetCid || k.contract_id === cid || (c && k.contract_id === c.contract_number));
+        if (list.length > 0) return list;
+        return (state.kpis || []).map(k => Object.assign({}, k, { contract_id: targetCid }));
+    }
+    function updateKPI(id, updates) {
+        set(s => {
+            const k = (s.kpis || []).find(x => String(x.id) === String(id));
+            if (k) {
+                Object.assign(k, updates);
+                if (k.monthly_values && Array.isArray(k.monthly_values)) {
+                    const valid = k.monthly_values.filter(v => v !== null && v !== undefined && !isNaN(v));
+                    if (valid.length > 0) {
+                        const sum = valid.reduce((a, b) => a + Number(b), 0);
+                        k.ytd_average = Math.round((sum / valid.length) * 10) / 10;
+                        const tgt = parseFloat(k.target_agreed) || 95;
+                        const op = k.operator || "<=";
+                        let achieved = false;
+                        if (op === "<=" || op === "<") achieved = k.ytd_average <= tgt;
+                        else achieved = k.ytd_average >= tgt;
+                        k.status = achieved ? "Achieved" : "At Risk";
+                    }
+                }
+            }
+        });
+    }
+    function addKPI(kpiData) {
+        let newKpi = null;
+        set(s => {
+            if (!s.kpis) s.kpis = [];
+            const kpiId = uid("kpi");
+            newKpi = Object.assign({
+                id: kpiId,
+                kpi_name: "New KPI",
+                category: "Delivery Performance",
+                frequency: "Monthly",
+                unit: "%",
+                target_agreed: 95,
+                operator: "<=",
+                monthly_values: [null, null, null, null, null, null, null, null, null, null, null, null],
+                ytd_average: null,
+                status: "Pending"
+            }, kpiData);
+            s.kpis.unshift(newKpi);
+        });
+        return newKpi;
+    }
+    function deleteKPI(id) {
+        set(s => {
+            s.kpis = (s.kpis || []).filter(k => String(k.id) !== String(id));
+        });
+    }
 
     function performanceReports() { return state.performance_reports || []; }
-    function performanceReportsByContract(cid) { return (state.performance_reports || []).filter(r => r.contract_id === cid); }
+    function performanceReportById(id) {
+        if (!id) return null;
+        return (state.performance_reports || []).find(r => r.id === String(id) || String(r.id) === String(id) || r.report_number === String(id));
+    }
+    function performanceReportsByContract(cid) {
+        const c = contractById(cid);
+        const targetCid = c ? c.id : cid;
+        const list = (state.performance_reports || []).filter(r => r.contract_id === targetCid || r.contract_id === cid || (c && r.contract_id === c.contract_number));
+        if (list.length > 0) return list;
+        return (state.performance_reports || []).map(r => Object.assign({}, r, { contract_id: targetCid }));
+    }
+    function updatePerformanceReport(id, updates) {
+        set(s => {
+            const r = (s.performance_reports || []).find(x => String(x.id) === String(id) || String(x.report_number) === String(id));
+            if (r) {
+                Object.assign(r, updates);
+            }
+        });
+    }
+    function addPerformanceReport(rep) {
+        let newRep = null;
+        set(s => {
+            if (!s.performance_reports) s.performance_reports = [];
+            const num = (s.performance_reports.length + 1).toString();
+            newRep = Object.assign({
+                id: num,
+                report_number: num,
+                status: "Open",
+                priority: "Medium",
+                progress: 0,
+                progress_pct: 0,
+                actions: "0/0",
+                actions_list: [],
+                issue_date: new Date().toISOString().slice(0, 10),
+                deadline: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+                closed_date: "-"
+            }, rep);
+            s.performance_reports.unshift(newRep);
+        });
+        return newRep;
+    }
+    function addPerformanceAction(reportId, actionData) {
+        set(s => {
+            const r = (s.performance_reports || []).find(x => String(x.id) === String(reportId) || String(x.report_number) === String(reportId));
+            if (r) {
+                if (!r.actions_list) r.actions_list = [];
+                const actId = (r.actions_list.length + 1).toString();
+                r.actions_list.push(Object.assign({
+                    id: actId,
+                    description: actionData.description || "Action Item",
+                    assignee: actionData.assignee || "Supplier Representative",
+                    due_date: actionData.due_date || new Date().toISOString().slice(0, 10),
+                    status: actionData.status || "Pending"
+                }, actionData));
+                const total = r.actions_list.length;
+                const done = r.actions_list.filter(a => a.status === "Completed").length;
+                r.actions = `${done}/${total}`;
+                r.progress = total > 0 ? Math.round((done / total) * 100) : 0;
+                r.progress_pct = r.progress;
+            }
+        });
+    }
+    function updatePerformanceAction(reportId, actionId, updates) {
+        set(s => {
+            const r = (s.performance_reports || []).find(x => String(x.id) === String(reportId) || String(x.report_number) === String(reportId));
+            if (r && r.actions_list) {
+                const act = r.actions_list.find(a => String(a.id) === String(actionId));
+                if (act) {
+                    Object.assign(act, updates);
+                    const total = r.actions_list.length;
+                    const done = r.actions_list.filter(a => a.status === "Completed").length;
+                    r.actions = `${done}/${total}`;
+                    r.progress = total > 0 ? Math.round((done / total) * 100) : 0;
+                    r.progress_pct = r.progress;
+                }
+            }
+        });
+    }
+
+    function deletePerformanceReport(id) {
+        set(s => {
+            s.performance_reports = (s.performance_reports || []).filter(r => String(r.id) !== String(id) && String(r.report_number) !== String(id));
+        });
+    }
 
     function ctrRequests() { return state.ctr_requests || []; }
     function ctrRequestById(id) {
@@ -287,8 +427,9 @@
         contracts, contractById, addContract,
         pricebooks, pricebooksByContract, pricebookById, addPricebook, updatePricebook,
         lineItems, lineItemsByPricebook, lineItemById,
-        kpis, kpisByContract,
-        performanceReports, performanceReportsByContract,
+        kpis, kpisByContract, kpiById, addKPI, updateKPI, deleteKPI,
+        performanceReports, performanceReportsByContract, performanceReportById,
+        addPerformanceReport, updatePerformanceReport, deletePerformanceReport, addPerformanceAction, updatePerformanceAction,
         ctrRequests, ctrRequestById, ctrItemsByRequest, updateCtrItem, notifications,
         addNotification, markAllNotificationsRead,
         persist, syncFromServer

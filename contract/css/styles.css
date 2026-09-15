@@ -2058,18 +2058,31 @@ th.pb-sticky-0, th.pb-sticky-1, th.pb-sticky-2, th.pb-sticky-3 { background: #F4
 }
 .sidebar-AY7Hhf {
     width: 260px;
+    min-width: 260px;
+    max-width: 260px;
     flex-shrink: 0;
     padding: 20px;
     position: relative;
-    transition: width 0.2s ease, padding 0.2s ease;
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.25s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    box-sizing: border-box;
 }
 .sidebar-AY7Hhf[data-minimized="true"] {
-    width: 44px !important;
-    padding: 12px 6px !important;
-    overflow: hidden !important;
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    padding: 16px 8px !important;
+}
+.sidebar-AY7Hhf .filterContent-YzzLD2 {
+    transition: opacity 0.2s ease;
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
 }
 .sidebar-AY7Hhf[data-minimized="true"] .filterContent-YzzLD2 {
     display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 .filterArrow-jGyFr7 {
     position: absolute;
@@ -2080,17 +2093,17 @@ th.pb-sticky-0, th.pb-sticky-1, th.pb-sticky-2, th.pb-sticky-3 { background: #F4
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    transition: background 0.15s;
-    z-index: 5;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    transition: transform 0.25s ease, right 0.25s ease, background 0.15s;
+    z-index: 10;
 }
 .filterArrow-jGyFr7:hover {
     background: #F3F4F6;
 }
 .sidebar-AY7Hhf[data-minimized="true"] .filterArrow-jGyFr7 {
-    right: 10px;
+    right: 12px;
     transform: rotate(180deg);
 }
 .filterFields-dIjaHp .form-group {
@@ -2116,13 +2129,18 @@ th.pb-sticky-0, th.pb-sticky-1, th.pb-sticky-2, th.pb-sticky-3 { background: #F4
     font-size: 13.5px;
     color: #374151;
     user-select: none;
+    position: relative;
 }
 .checkbox-UKyIAt input {
     position: absolute;
     opacity: 0;
-    width: 0;
-    height: 0;
-    pointer-events: none;
+    width: 18px;
+    height: 18px;
+    left: 0;
+    top: 0;
+    margin: 0;
+    cursor: pointer;
+    z-index: 2;
 }
 .box-u07F6U {
     width: 16px;
@@ -2136,6 +2154,8 @@ th.pb-sticky-0, th.pb-sticky-1, th.pb-sticky-2, th.pb-sticky-3 { background: #F4
     background: #FFFFFF;
     flex-shrink: 0;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
 }
 .checkbox-UKyIAt input:checked + .box-u07F6U {
     background: #84CC16 !important;
