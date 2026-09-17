@@ -216,8 +216,9 @@ window.ContractFormView = (function () {
             });
         }
 
-        // Initialize datepickers
+        // Initialize datepickers and custom selects
         window.UI.initAllDatePickers(root);
+        window.UI.initAllCustomSelects(root);
 
         const form = root.querySelector("#new-contract-form");
         if (form.valid_from) {

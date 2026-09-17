@@ -65,6 +65,11 @@ window.Router = (function () {
         } else {
             window.ContractsListView.render(root);
         }
+
+        // Initialize custom selects across any view
+        if (window.UI && window.UI.initAllCustomSelects) {
+            window.UI.initAllCustomSelects(root);
+        }
     }
 
     function renderGlobalPricebooks(root) {

@@ -716,6 +716,7 @@ window.PricebookDetailView = (function () {
 
         // Event listeners & Handlers
         attachEvents(root, contract, pricebook, allItems, () => render(root, contractId, pricebookId));
+        window.UI.initAllCustomSelects(root);
     }
 
     function renderPaginationNumbers(curr, total) {

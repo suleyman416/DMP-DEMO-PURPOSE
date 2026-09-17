@@ -255,8 +255,9 @@ window.ContractsListView = (function () {
             ${window.UI.renderFeedbackBubble ? window.UI.renderFeedbackBubble() : ""}
         `;
 
-        // Initialize datepickers
+        // Initialize datepickers and custom selects
         window.UI.initAllDatePickers(root);
+        window.UI.initAllCustomSelects(root);
 
         // Event bindings
         const searchInput = root.querySelector("#search-here-input");

@@ -187,9 +187,7 @@
     function kpisByContract(cid) {
         const c = contractById(cid);
         const targetCid = c ? c.id : cid;
-        const list = (state.kpis || []).filter(k => k.contract_id === targetCid || k.contract_id === cid || (c && k.contract_id === c.contract_number));
-        if (list.length > 0) return list;
-        return (state.kpis || []).map(k => Object.assign({}, k, { contract_id: targetCid }));
+        return (state.kpis || []).filter(k => k.contract_id === targetCid || k.contract_id === cid || (c && k.contract_id === c.contract_number));
     }
     function updateKPI(id, updates) {
         set(s => {

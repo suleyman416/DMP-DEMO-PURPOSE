@@ -247,18 +247,18 @@ window.ContractDetailView = (function () {
                                         <div class="ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow" style="width: 100%; position: relative;">
                                             <div class="ant-select-selector" style="display:flex;align-items:center;width:100%;height:100%;">
                                                 <span class="ant-select-selection-wrap" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
-                                                    <span id="pb-currency-display" class="${pbCurrencyFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13.5px;color:${pbCurrencyFilter ? '#111827' : '#9CA3AF'};">
-                                                        ${pbCurrencyFilter || 'Select...'}
+                                                    <span id="pb-currency-display" class="${pbCurrencyFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13.5px;color:${pbCurrencyFilter ? '#111827' : '#8C8C8C'};">
+                                                        ${pbCurrencyFilter || 'Select a currency'}
                                                     </span>
                                                 </span>
                                                 <span class="ant-select-arrow" style="margin-left:8px;pointer-events:none;">
                                                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
                                                     </svg>
                                                 </span>
                                             </div>
-                                            <select id="pb-currency-select" aria-label="Currency" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">
-                                                <option value="" ${pbCurrencyFilter === "" ? "selected" : ""}>Select...</option>
+                                            <select id="pb-currency-select" aria-label="Currency" placeholder="Select a currency">
+                                                <option value="" disabled ${pbCurrencyFilter === "" ? "selected" : ""} hidden>Select a currency</option>
                                                 <option value="USD" ${pbCurrencyFilter === "USD" ? "selected" : ""}>USD</option>
                                                 <option value="EUR" ${pbCurrencyFilter === "EUR" ? "selected" : ""}>EUR</option>
                                                 <option value="GBP" ${pbCurrencyFilter === "GBP" ? "selected" : ""}>GBP</option>
@@ -471,6 +471,7 @@ window.ContractDetailView = (function () {
     function renderKPITab(contract, kpis, isCust) {
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const filteredKPIs = filterKPIs(kpis);
+        const availableCategories = Array.from(new Set((kpis || []).map(k => k.category).filter(Boolean)));
 
         return `
             <div class="flex-column h-full tabView-HlFARP">
@@ -479,7 +480,7 @@ window.ContractDetailView = (function () {
                     <aside class="card-eNpN6p flex-column sidebar-AY7Hhf fillHeight-gnyNzB" data-minimized="false">
                         <div class="flex-center filterArrow-jGyFr7" title="Collapse sidebar">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6.71754 1.76798C6.82494 1.6613 6.96974 1.60077 7.12111 1.59927C7.27248 1.59778 7.41845 1.65544 7.52794 1.75998C7.58155 1.81078 7.62441 1.87183 7.654 1.9395C7.68359 2.00718 7.6993 2.0801 7.70019 2.15395C7.70109 2.2278 7.68715 2.30108 7.65921 2.36945C7.63127 2.43782 7.5899 2.49989 7.53754 2.55198L2.17754 7.91758L7.83354 13.444C7.88652 13.4954 7.92863 13.557 7.9574 13.625C7.98616 13.693 8.00097 13.7661 8.00097 13.84C8.00097 13.9138 7.98616 13.9869 7.9574 14.055C7.92863 14.123 7.88652 14.1845 7.83354 14.236C7.72503 14.3412 7.57985 14.4 7.42874 14.4C7.27762 14.4 7.13244 14.3412 7.02394 14.236L0.967936 8.31998C0.915306 8.26886 0.873395 8.20776 0.844654 8.14025C0.815912 0.87275 0.800917 8.00019 0.800544 7.92682C0.800172 7.85345 0.81443 7.78074 0.842485 7.71295C0.870539 7.64515 0.911828 7.58363 0.963936 7.53198L6.71754 1.76798ZM13.9175 1.76798C14.0249 1.66154 14.1695 1.60115 14.3207 1.59966C14.4719 1.59817 14.6177 1.65568 14.7271 1.75998C14.7807 1.81078 14.8236 1.87183 14.8532 1.9395C14.8828 2.00718 14.8985 2.0801 14.8994 2.15395C14.9003 2.2278 14.8864 2.30108 14.8584 2.36945C14.8305 2.43782 14.7891 2.49989 14.7367 2.55198L9.37674 7.91758L15.0327 13.444C15.0857 13.4954 15.1278 13.557 15.1566 13.625C15.1854 13.693 15.2002 13.7661 15.2002 13.84C15.2002 13.9138 15.1854 13.9869 15.1566 14.055C15.1278 14.123 15.0857 14.1845 15.0327 14.236C14.9242 14.3412 14.779 14.4 14.6279 14.4C14.4768 14.4 14.3316 14.3412 14.2231 14.236L8.16794 8.31998C8.11531 8.26886 8.0734 8.20776 8.04465 8.14025C8.01591 8.07275 8.00092 8.00019 8.00055 7.92682C8.00017 7.85345 8.01443 7.78074 8.04249 7.71295C8.07054 7.64515 8.11183 7.58363 8.16394 7.53198L13.9175 1.76798Z" fill="#3A3A3A"></path>
+                                <path d="M6.71754 1.76798C6.82494 1.6613 6.96974 1.60077 7.12111 1.59927C7.27248 1.59778 7.41845 1.65544 7.52794 1.75998C7.58155 1.81078 7.62441 1.87183 7.654 1.9395C7.68359 2.00718 7.6993 2.0801 7.70019 2.15395C7.70109 2.2278 7.68715 2.30108 7.65921 2.36945C7.63127 2.43782 7.5899 2.49989 7.53754 2.55198L2.17754 7.91758L7.83354 13.444C7.88652 13.4954 7.92863 13.557 7.9574 13.625C7.98616 13.693 8.00097 13.7661 8.00097 13.84C8.00097 13.9138 7.98616 13.9869 7.9574 14.055C7.92863 14.123 7.88652 14.1845 7.83354 14.236C7.72503 14.3412 7.57985 14.4 7.42874 14.4C7.27762 14.4 7.13244 14.3412 7.02394 14.236L0.967936 8.31998C0.915306 8.26886 0.873395 8.20776 0.844654 8.14025C0.815912 8.07275 0.800917 8.00019 0.800544 7.92682C0.800172 7.85345 0.81443 7.78074 0.842485 7.71295C0.870539 7.64515 0.911828 7.58363 0.963936 7.53198L6.71754 1.76798ZM13.9175 1.76798C14.0249 1.66154 14.1695 1.60115 14.3207 1.59966C14.4719 1.59817 14.6177 1.65568 14.7271 1.75998C14.7807 1.81078 14.8236 1.87183 14.8532 1.9395C14.8828 2.00718 14.8985 2.0801 14.8994 2.15395C14.9003 2.2278 14.8864 2.30108 14.8584 2.36945C14.8305 2.43782 14.7891 2.49989 14.7367 2.55198L9.37674 7.91758L15.0327 13.444C15.0857 13.4954 15.1278 13.557 15.1566 13.625C15.1854 13.693 15.2002 13.7661 15.2002 13.84C15.2002 13.9138 15.1854 13.9869 15.1566 14.055C15.1278 14.123 15.0857 14.1845 15.0327 14.236C14.9242 14.3412 14.779 14.4 14.6279 14.4C14.4768 14.4 14.3316 14.3412 14.2231 14.236L8.16794 8.31998C8.11531 8.26886 8.0734 8.20776 8.04465 8.14025C8.01591 8.07275 8.00092 8.00019 8.00055 7.92682C8.00017 7.85345 8.01443 7.78074 8.04249 7.71295C8.07054 7.64515 8.11183 7.58363 8.16394 7.53198L13.9175 1.76798Z" fill="#3A3A3A"></path>
                             </svg>
                         </div>
                         <div class="flex-column filterContent-YzzLD2">
@@ -490,16 +491,16 @@ window.ContractDetailView = (function () {
                                         <div class="ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow" style="width: 100%; position: relative;">
                                             <div class="ant-select-selector" style="display:flex;align-items:center;width:100%;height:100%;">
                                                 <span class="ant-select-selection-wrap" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
-                                                    <span class="${kpiFrequencyFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13px;color:${kpiFrequencyFilter ? '#111827' : '#9CA3AF'};">
-                                                        ${kpiFrequencyFilter || 'All Frequencies'}
+                                                    <span class="${kpiFrequencyFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13.5px;color:${kpiFrequencyFilter ? '#111827' : '#8C8C8C'};">
+                                                        ${kpiFrequencyFilter || 'Select frequency'}
                                                     </span>
                                                 </span>
                                                 <span class="ant-select-arrow" style="margin-left:8px;pointer-events:none;">
-                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                                 </span>
                                             </div>
-                                            <select id="kpi-frequency-select" aria-label="View Mode" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">
-                                                <option value="" ${kpiFrequencyFilter === "" ? "selected" : ""}>All Frequencies</option>
+                                            <select id="kpi-frequency-select" aria-label="View Mode" placeholder="Select frequency">
+                                                <option value="" disabled ${kpiFrequencyFilter === "" ? "selected" : ""} hidden>Select frequency</option>
                                                 <option value="Monthly" ${kpiFrequencyFilter === "Monthly" ? "selected" : ""}>Monthly</option>
                                                 <option value="Quarterly" ${kpiFrequencyFilter === "Quarterly" ? "selected" : ""}>Quarterly</option>
                                                 <option value="Annually" ${kpiFrequencyFilter === "Annually" ? "selected" : ""}>Annually</option>
@@ -513,22 +514,17 @@ window.ContractDetailView = (function () {
                                         <div class="ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow" style="width: 100%; position: relative;">
                                             <div class="ant-select-selector" style="display:flex;align-items:center;width:100%;height:100%;">
                                                 <span class="ant-select-selection-wrap" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
-                                                    <span class="${kpiCategoryFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13px;color:${kpiCategoryFilter ? '#111827' : '#9CA3AF'};">
-                                                        ${kpiCategoryFilter ? (kpiCategoryFilter === 'Delivery' ? 'Delivery Performance' : (kpiCategoryFilter === 'Quality' ? 'Quality Performance' : kpiCategoryFilter)) : 'All Categories'}
+                                                    <span class="${kpiCategoryFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13.5px;color:${kpiCategoryFilter ? '#111827' : '#8C8C8C'};">
+                                                        ${kpiCategoryFilter || 'Select category'}
                                                     </span>
                                                 </span>
                                                 <span class="ant-select-arrow" style="margin-left:8px;pointer-events:none;">
-                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                                 </span>
                                             </div>
-                                            <select id="kpi-category-select" aria-label="KPI Categories" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">
-                                                <option value="" ${kpiCategoryFilter === "" ? "selected" : ""}>All Categories</option>
-                                                <option value="Delivery" ${kpiCategoryFilter === "Delivery" ? "selected" : ""}>Delivery Performance</option>
-                                                <option value="Quality" ${kpiCategoryFilter === "Quality" ? "selected" : ""}>Quality Performance</option>
-                                                <option value="Commercial" ${kpiCategoryFilter === "Commercial" ? "selected" : ""}>Commercial</option>
-                                                <option value="Safety" ${kpiCategoryFilter === "Safety" ? "selected" : ""}>Safety</option>
-                                                <option value="Compliance" ${kpiCategoryFilter === "Compliance" ? "selected" : ""}>Compliance</option>
-                                                <option value="Operational" ${kpiCategoryFilter === "Operational" ? "selected" : ""}>Operational</option>
+                                            <select id="kpi-category-select" aria-label="KPI Categories" placeholder="Select category">
+                                                <option value="" disabled ${kpiCategoryFilter === "" ? "selected" : ""} hidden>Select category</option>
+                                                ${availableCategories.map(cat => `<option value="${window.UI.esc(cat)}" ${kpiCategoryFilter === cat ? "selected" : ""}>${window.UI.esc(cat)}</option>`).join("")}
                                             </select>
                                         </div>
                                     </div>
@@ -539,18 +535,18 @@ window.ContractDetailView = (function () {
                                         <div class="ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow" style="width: 100%; position: relative;">
                                             <div class="ant-select-selector" style="display:flex;align-items:center;width:100%;height:100%;">
                                                 <span class="ant-select-selection-wrap" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
-                                                    <span class="ant-select-selection-item" style="font-size:13px;color:#111827;">
+                                                    <span class="ant-select-selection-item" style="font-size:13.5px;color:#111827;">
                                                         ${kpiYearFilter || '2026'}
                                                     </span>
                                                 </span>
                                                 <span class="ant-select-arrow" style="margin-left:8px;pointer-events:none;">
-                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                                 </span>
                                             </div>
-                                            <select id="kpi-year-select" aria-label="Date" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">
-                                                <option value="2026" ${kpiYearFilter === "2026" ? "selected" : ""}>2026</option>
-                                                <option value="2025" ${kpiYearFilter === "2025" ? "selected" : ""}>2025</option>
-                                                <option value="2024" ${kpiYearFilter === "2024" ? "selected" : ""}>2024</option>
+                                            <select id="kpi-year-select" aria-label="Date">
+                                                ${["2020", "2021", "2022", "2023", "2024", "2025", "2026"].map(y => `
+                                                    <option value="${y}" ${kpiYearFilter === y ? "selected" : ""}>${y}</option>
+                                                `).join("")}
                                             </select>
                                         </div>
                                     </div>
@@ -1023,8 +1019,9 @@ window.ContractDetailView = (function () {
             });
         }
 
-        // Initialize datepickers
+        // Initialize datepickers and custom selects
         window.UI.initAllDatePickers(root);
+        window.UI.initAllCustomSelects(root);
 
         // 5. Action Handlers
         window.UI.bindActions(root, {
@@ -1306,6 +1303,7 @@ window.ContractDetailView = (function () {
         div.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;";
         div.innerHTML = modalHtml;
         document.body.appendChild(div);
+        window.UI.initAllCustomSelects(div);
 
         const close = () => { div.remove(); };
         div.querySelector("#kpi-modal-close").onclick = close;
@@ -1597,6 +1595,7 @@ window.ContractDetailView = (function () {
         div.innerHTML = modalHtml;
         document.body.appendChild(div);
         window.UI.initAllDatePickers(div);
+        window.UI.initAllCustomSelects(div);
 
         const close = () => { div.remove(); };
         div.querySelector("#perf-create-close").onclick = close;
@@ -1969,6 +1968,7 @@ window.ContractDetailView = (function () {
         div.innerHTML = modalHtml;
         document.body.appendChild(div);
         window.UI.initAllDatePickers(div);
+        window.UI.initAllCustomSelects(div);
 
         const close = () => { div.remove(); };
         div.querySelector("#perf-edit-close").onclick = close;

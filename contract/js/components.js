@@ -90,6 +90,8 @@ window.UI = (function () {
             if (e.target === overlay && opts.dismissable !== false) overlay.remove();
         });
         if (opts.onOpen) opts.onOpen(overlay);
+        initAllDatePickers(overlay);
+        initAllCustomSelects(overlay);
         return { overlay, close: () => overlay.remove() };
     }
 
@@ -512,6 +514,7 @@ window.UI = (function () {
         div.id = "pb-modal-container";
         div.innerHTML = modalHtml;
         document.body.appendChild(div);
+        initAllCustomSelects(div);
 
         const close = () => { div.remove(); };
         div.querySelector("#pb-modal-close").onclick = close;
@@ -1062,6 +1065,306 @@ window.UI = (function () {
         containers.forEach(c => initDatePicker(c));
     }
 
+    /* ============================================================
+       1:1 Ant Design Custom Select Engine
+       Exact match with live DMP design reference:
+       - Custom floating dropdown popup with soft shadow & rounded corners
+       - Light sage/olive green selected item with green checkmark
+       - Official Ant Design Empty State ("No data" with tray SVG)
+       - Hover state with tooltip matching media_1789641175872.png
+       - Upward / downward auto-flip positioning
+       ============================================================ */
+    function initCustomSelect(target, opts = {}) {
+        if (!target) return;
+
+        let container = target;
+        let select = target.matches("select") ? target : target.querySelector("select");
+
+        if (!select) return;
+
+        // If a standalone <select> was provided without an .ant-select container, wrap it
+        if (target.matches("select")) {
+            if (target.parentElement && target.parentElement.classList.contains("ant-select")) {
+                container = target.parentElement;
+            } else {
+                container = document.createElement("div");
+                container.className = "ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow";
+                if (target.style.width) container.style.width = target.style.width;
+                if (target.classList.contains("w-full")) container.classList.add("w-full");
+
+                const selector = document.createElement("div");
+                selector.className = "ant-select-selector";
+                selector.style.cssText = "display:flex;align-items:center;width:100%;height:100%;";
+
+                const wrap = document.createElement("span");
+                wrap.className = "ant-select-selection-wrap";
+                wrap.style.cssText = "flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;";
+
+                const initialOpt = target.querySelector("option:checked") || target.options[0];
+                const isPl = !initialOpt || initialOpt.value === "" || initialOpt.disabled;
+
+                wrap.innerHTML = `<span class="${isPl ? 'ant-select-selection-placeholder' : 'ant-select-selection-item'}" style="font-size:13.5px;color:${isPl ? '#8C8C8C' : '#111827'};">${esc(initialOpt ? initialOpt.textContent : (target.getAttribute('placeholder') || 'Select...'))}</span>`;
+
+                const arrow = document.createElement("span");
+                arrow.className = "ant-select-arrow";
+                arrow.innerHTML = `<svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+                selector.appendChild(wrap);
+                selector.appendChild(arrow);
+
+                target.parentNode.insertBefore(container, target);
+                container.appendChild(selector);
+                container.appendChild(target);
+            }
+        }
+
+        function syncDisplay() {
+            const checkedOpt = select.querySelector("option:checked") || select.options[select.selectedIndex];
+            const isPl = !checkedOpt || checkedOpt.value === "" || checkedOpt.disabled;
+            const textSpan = container.querySelector(".ant-select-selection-item, .ant-select-selection-placeholder");
+            if (textSpan) {
+                textSpan.className = isPl ? "ant-select-selection-placeholder" : "ant-select-selection-item";
+                textSpan.style.color = isPl ? "#8C8C8C" : "#111827";
+                textSpan.textContent = checkedOpt ? checkedOpt.textContent : (select.getAttribute("placeholder") || "Select...");
+            }
+        }
+
+        container.__syncDisplay = syncDisplay;
+
+        if (container.__customSelectInitialized) {
+            syncDisplay();
+            return;
+        }
+        container.__customSelectInitialized = true;
+
+        container.setAttribute("role", "combobox");
+        container.setAttribute("aria-haspopup", "listbox");
+        container.setAttribute("aria-expanded", "false");
+        container.setAttribute("tabindex", "0");
+
+        // Completely disable native select interactions so OS dropdown NEVER opens
+        select.style.position = "absolute";
+        select.style.inset = "0";
+        select.style.opacity = "0";
+        select.style.pointerEvents = "none";
+        select.style.zIndex = "-1";
+
+        select.addEventListener("change", syncDisplay);
+        select.addEventListener("input", syncDisplay);
+
+        let activeDropdown = null;
+
+        function closeDropdown() {
+            if (activeDropdown) {
+                activeDropdown.remove();
+                activeDropdown = null;
+            }
+            container.classList.remove("ant-select-open", "ant-select-focused");
+            container.setAttribute("aria-expanded", "false");
+
+            const activeTooltip = document.querySelector(".ant-select-item-tooltip");
+            if (activeTooltip) activeTooltip.remove();
+
+            document.removeEventListener("click", onDocClick, true);
+            window.removeEventListener("resize", closeDropdown);
+            window.removeEventListener("scroll", onScroll, true);
+        }
+
+        function onDocClick(e) {
+            if (activeDropdown && !activeDropdown.contains(e.target) && !container.contains(e.target)) {
+                closeDropdown();
+            }
+        }
+
+        function onScroll(e) {
+            if (activeDropdown && !activeDropdown.contains(e.target) && !container.contains(e.target)) {
+                closeDropdown();
+            }
+        }
+
+        function openDropdown() {
+            // Close any existing open dropdowns across the application
+            document.querySelectorAll(".ant-select-dropdown").forEach(d => d.remove());
+            document.querySelectorAll(".ant-select.ant-select-open").forEach(s => {
+                s.classList.remove("ant-select-open", "ant-select-focused");
+                s.setAttribute("aria-expanded", "false");
+            });
+
+            container.classList.add("ant-select-open", "ant-select-focused");
+            container.setAttribute("aria-expanded", "true");
+
+            const rect = container.getBoundingClientRect();
+            const rawOptions = Array.from(select.querySelectorAll("option"));
+
+            // Filter out placeholder options if they are disabled/hidden or empty string placeholders
+            const validOptions = rawOptions.filter(opt => {
+                if (opt.disabled || opt.hidden) return false;
+                if (opt.value === "" && opt.getAttribute("data-placeholder") === "1") return false;
+                if (opt.value === "" && opt.textContent.trim().toLowerCase().startsWith("select")) return false;
+                return true;
+            });
+
+            const dropdown = document.createElement("div");
+            dropdown.className = "ant-select-dropdown ant-select-dropdown-placement-bottomLeft";
+            dropdown.setAttribute("role", "listbox");
+            dropdown.setAttribute("tabindex", "-1");
+
+            if (validOptions.length === 0) {
+                // Official Ant Design Empty State ("No data") matching media_1789641196120.png
+                dropdown.classList.add("ant-select-dropdown-empty");
+                dropdown.innerHTML = `
+                    <div class="ant-select-empty">
+                        <div class="ant-empty-image">
+                            <svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg">
+                                <g transform="translate(0 1)" fill="none" fill-rule="evenodd">
+                                    <ellipse fill="#F5F5F5" cx="32" cy="33" rx="32" ry="7"></ellipse>
+                                    <g fill-rule="nonzero" stroke="#D9D9D9">
+                                        <path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path>
+                                        <path d="M41.613 15.914c0 .874-.707 1.583-1.58 1.583H23.967c-.873 0-1.58-.709-1.58-1.583V12.76H9V30.5c0 1.933 1.567 3.5 3.5 3.5h39c1.933 0 3.5-1.567 3.5-3.5V12.76h-13.387v3.154z" fill="#FAFAFA"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="ant-empty-description">No data</div>
+                    </div>
+                `;
+            } else {
+                // Options list matching media_1789641175872.png and media_1789641189225.png
+                const curVal = select.value;
+                const itemsHtml = validOptions.map(opt => {
+                    const isSelected = opt.value === curVal || (!curVal && opt.selected && opt.value !== "");
+                    return `
+                        <div class="ant-select-item ant-select-item-option ${isSelected ? 'ant-select-item-option-selected' : ''}" 
+                             role="option" 
+                             aria-selected="${isSelected ? 'true' : 'false'}"
+                             data-val="${esc(opt.value)}"
+                             data-title="${esc(opt.textContent.trim())}"
+                             title="${esc(opt.textContent.trim())}">
+                            <div class="ant-select-item-option-content">${esc(opt.textContent.trim())}</div>
+                            ${isSelected ? `
+                                <span class="ant-select-item-option-state">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13.5 4.5L6.5 11.5L3 8" stroke="#4E5D45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join("");
+
+                dropdown.innerHTML = `<div class="ant-select-dropdown-menu">${itemsHtml}</div>`;
+
+                // Tooltip on hover matching media_1789641175872.png
+                dropdown.querySelectorAll(".ant-select-item-option").forEach(itemEl => {
+                    itemEl.addEventListener("mouseenter", () => {
+                        const titleText = itemEl.getAttribute("data-title");
+                        if (!titleText) return;
+                        let tip = document.querySelector(".ant-select-item-tooltip");
+                        if (!tip) {
+                            tip = document.createElement("div");
+                            tip.className = "ant-select-item-tooltip";
+                            document.body.appendChild(tip);
+                        }
+                        tip.textContent = titleText;
+                        const itemRect = itemEl.getBoundingClientRect();
+                        tip.style.left = (itemRect.right + 8) + "px";
+                        tip.style.top = (itemRect.top + itemRect.height / 2 - 13) + "px";
+                        tip.classList.add("show");
+                    });
+
+                    itemEl.addEventListener("mouseleave", () => {
+                        const tip = document.querySelector(".ant-select-item-tooltip");
+                        if (tip) tip.remove();
+                    });
+
+                    // Option click
+                    itemEl.addEventListener("click", e => {
+                        e.stopPropagation();
+                        const tip = document.querySelector(".ant-select-item-tooltip");
+                        if (tip) tip.remove();
+
+                        const val = itemEl.getAttribute("data-val");
+                        select.value = val;
+                        syncDisplay();
+
+                        select.dispatchEvent(new Event("input", { bubbles: true }));
+                        select.dispatchEvent(new Event("change", { bubbles: true }));
+
+                        closeDropdown();
+                    });
+                });
+            }
+
+            document.body.appendChild(dropdown);
+            activeDropdown = dropdown;
+
+            // Dimensions & Positioning
+            const dropdownHeight = dropdown.offsetHeight || (validOptions.length === 0 ? 140 : Math.min(validOptions.length * 36 + 8, 256));
+            const viewportHeight = window.innerHeight;
+            const spaceBelow = viewportHeight - rect.bottom;
+            const spaceAbove = rect.top;
+
+            dropdown.style.width = rect.width + "px";
+            dropdown.style.left = rect.left + "px";
+
+            // If near the bottom of viewport and more space above, open upwards (as in media_1789641189225.png)
+            if (spaceBelow < dropdownHeight + 10 && spaceAbove > spaceBelow) {
+                dropdown.classList.remove("ant-select-dropdown-placement-bottomLeft");
+                dropdown.classList.add("ant-select-dropdown-placement-topLeft");
+                dropdown.style.top = (rect.top - dropdownHeight - 4) + "px";
+            } else {
+                dropdown.classList.remove("ant-select-dropdown-placement-topLeft");
+                dropdown.classList.add("ant-select-dropdown-placement-bottomLeft");
+                dropdown.style.top = (rect.bottom + 4) + "px";
+            }
+
+            // Scroll selected option into view
+            const selEl = dropdown.querySelector(".ant-select-item-option-selected");
+            if (selEl) {
+                selEl.scrollIntoView({ block: "nearest" });
+            }
+
+            setTimeout(() => {
+                document.addEventListener("click", onDocClick, true);
+                window.addEventListener("resize", closeDropdown);
+                window.addEventListener("scroll", onScroll, true);
+            }, 10);
+        }
+
+        container.onclick = e => {
+            e.stopPropagation();
+            if (activeDropdown) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        };
+
+        container.onkeydown = e => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                if (activeDropdown) closeDropdown();
+                else openDropdown();
+            } else if (e.key === "Escape") {
+                closeDropdown();
+            }
+        };
+    }
+
+    function initAllCustomSelects(root = document) {
+        // 1. Initialize existing .ant-select containers
+        const antSelects = root.querySelectorAll(".ant-select");
+        antSelects.forEach(c => initCustomSelect(c));
+
+        // 2. Wrap and initialize standalone select elements across all forms, tables, and modals
+        const standaloneSelects = root.querySelectorAll("select:not(.native-select-ignore)");
+        standaloneSelects.forEach(s => {
+            if (!s.closest(".ant-select")) {
+                initCustomSelect(s);
+            }
+        });
+    }
+
     return {
         esc,
         go,
@@ -1088,6 +1391,9 @@ window.UI = (function () {
         initDatePicker,
         setDatePickerError,
         clearDatePickerError,
-        initAllDatePickers
+        initAllDatePickers,
+        initCustomSelect,
+        initAllCustomSelects
     };
 })();
+

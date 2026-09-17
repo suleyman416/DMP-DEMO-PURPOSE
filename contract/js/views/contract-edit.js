@@ -168,8 +168,9 @@ window.ContractEditView = (function () {
             ${window.UI.renderFeedbackBubble ? window.UI.renderFeedbackBubble() : ""}
         `;
 
-        // Initialize datepickers
+        // Initialize datepickers and custom selects
         window.UI.initAllDatePickers(root);
+        window.UI.initAllCustomSelects(root);
 
         // Event handling
         const form = root.querySelector("#edit-contract-form");
