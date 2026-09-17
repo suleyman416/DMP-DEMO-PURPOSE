@@ -244,9 +244,21 @@ window.ContractDetailView = (function () {
                                         <label class="label-uhdLaM minWidth-d4JjCT">Currency</label>
                                     </div>
                                     <div class="container-sIDwkX">
-                                        <div class="ant-select ant-select-outlined select-l8uECl ant-select-single ant-select-show-arrow" style="width: 100%;">
-                                            <select id="pb-currency-select" style="width: 100%; height: 38px; padding: 0 10px; border: 1px solid #D9D9D9; border-radius: 6px; font-size: 13.5px; background: #FFF; color: #111827;">
-                                                <option value="" ${pbCurrencyFilter === "" ? "selected" : ""}>All Currencies</option>
+                                        <div class="ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow" style="width: 100%; position: relative;">
+                                            <div class="ant-select-selector" style="display:flex;align-items:center;width:100%;height:100%;">
+                                                <span class="ant-select-selection-wrap" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                                    <span id="pb-currency-display" class="${pbCurrencyFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13.5px;color:${pbCurrencyFilter ? '#111827' : '#9CA3AF'};">
+                                                        ${pbCurrencyFilter || 'Select...'}
+                                                    </span>
+                                                </span>
+                                                <span class="ant-select-arrow" style="margin-left:8px;pointer-events:none;">
+                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                            <select id="pb-currency-select" aria-label="Currency" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">
+                                                <option value="" ${pbCurrencyFilter === "" ? "selected" : ""}>Select...</option>
                                                 <option value="USD" ${pbCurrencyFilter === "USD" ? "selected" : ""}>USD</option>
                                                 <option value="EUR" ${pbCurrencyFilter === "EUR" ? "selected" : ""}>EUR</option>
                                                 <option value="GBP" ${pbCurrencyFilter === "GBP" ? "selected" : ""}>GBP</option>
@@ -475,8 +487,18 @@ window.ContractDetailView = (function () {
                                 <div class="form-group">
                                     <label class="label-uhdLaM minWidth-d4JjCT">View Mode</label>
                                     <div class="container-sIDwkX">
-                                        <div class="ant-select ant-select-outlined select-l8uECl ant-select-single ant-select-show-arrow" style="width: 100%;">
-                                            <select id="kpi-frequency-select" style="width: 100%; height: 38px; padding: 0 10px; border: 1px solid #D9D9D9; border-radius: 6px; font-size: 13px; background: #FFF; color: #111827;">
+                                        <div class="ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow" style="width: 100%; position: relative;">
+                                            <div class="ant-select-selector" style="display:flex;align-items:center;width:100%;height:100%;">
+                                                <span class="ant-select-selection-wrap" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                                    <span class="${kpiFrequencyFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13px;color:${kpiFrequencyFilter ? '#111827' : '#9CA3AF'};">
+                                                        ${kpiFrequencyFilter || 'All Frequencies'}
+                                                    </span>
+                                                </span>
+                                                <span class="ant-select-arrow" style="margin-left:8px;pointer-events:none;">
+                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                </span>
+                                            </div>
+                                            <select id="kpi-frequency-select" aria-label="View Mode" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">
                                                 <option value="" ${kpiFrequencyFilter === "" ? "selected" : ""}>All Frequencies</option>
                                                 <option value="Monthly" ${kpiFrequencyFilter === "Monthly" ? "selected" : ""}>Monthly</option>
                                                 <option value="Quarterly" ${kpiFrequencyFilter === "Quarterly" ? "selected" : ""}>Quarterly</option>
@@ -488,8 +510,18 @@ window.ContractDetailView = (function () {
                                 <div class="form-group">
                                     <label class="label-uhdLaM minWidth-d4JjCT">KPI Categories</label>
                                     <div class="container-sIDwkX">
-                                        <div class="ant-select ant-select-outlined select-l8uECl ant-select-single ant-select-show-arrow" style="width: 100%;">
-                                            <select id="kpi-category-select" style="width: 100%; height: 38px; padding: 0 10px; border: 1px solid #D9D9D9; border-radius: 6px; font-size: 13px; background: #FFF; color: #111827;">
+                                        <div class="ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow" style="width: 100%; position: relative;">
+                                            <div class="ant-select-selector" style="display:flex;align-items:center;width:100%;height:100%;">
+                                                <span class="ant-select-selection-wrap" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                                    <span class="${kpiCategoryFilter ? 'ant-select-selection-item' : 'ant-select-selection-placeholder'}" style="font-size:13px;color:${kpiCategoryFilter ? '#111827' : '#9CA3AF'};">
+                                                        ${kpiCategoryFilter ? (kpiCategoryFilter === 'Delivery' ? 'Delivery Performance' : (kpiCategoryFilter === 'Quality' ? 'Quality Performance' : kpiCategoryFilter)) : 'All Categories'}
+                                                    </span>
+                                                </span>
+                                                <span class="ant-select-arrow" style="margin-left:8px;pointer-events:none;">
+                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                </span>
+                                            </div>
+                                            <select id="kpi-category-select" aria-label="KPI Categories" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">
                                                 <option value="" ${kpiCategoryFilter === "" ? "selected" : ""}>All Categories</option>
                                                 <option value="Delivery" ${kpiCategoryFilter === "Delivery" ? "selected" : ""}>Delivery Performance</option>
                                                 <option value="Quality" ${kpiCategoryFilter === "Quality" ? "selected" : ""}>Quality Performance</option>
@@ -504,8 +536,18 @@ window.ContractDetailView = (function () {
                                 <div class="form-group">
                                     <label class="label-uhdLaM minWidth-d4JjCT">Date</label>
                                     <div class="container-sIDwkX">
-                                        <div class="ant-select ant-select-outlined select-l8uECl ant-select-single ant-select-show-arrow" style="width: 100%;">
-                                            <select id="kpi-year-select" style="width: 100%; height: 38px; padding: 0 10px; border: 1px solid #D9D9D9; border-radius: 6px; font-size: 13px; background: #FFF; color: #111827;">
+                                        <div class="ant-select ant-select-outlined select-l8uECl css-1r50iqp ant-select-single ant-select-show-arrow" style="width: 100%; position: relative;">
+                                            <div class="ant-select-selector" style="display:flex;align-items:center;width:100%;height:100%;">
+                                                <span class="ant-select-selection-wrap" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                                    <span class="ant-select-selection-item" style="font-size:13px;color:#111827;">
+                                                        ${kpiYearFilter || '2026'}
+                                                    </span>
+                                                </span>
+                                                <span class="ant-select-arrow" style="margin-left:8px;pointer-events:none;">
+                                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.75L6 6.25L10.5 1.75" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                </span>
+                                            </div>
+                                            <select id="kpi-year-select" aria-label="Date" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">
                                                 <option value="2026" ${kpiYearFilter === "2026" ? "selected" : ""}>2026</option>
                                                 <option value="2025" ${kpiYearFilter === "2025" ? "selected" : ""}>2025</option>
                                                 <option value="2024" ${kpiYearFilter === "2024" ? "selected" : ""}>2024</option>
@@ -981,6 +1023,9 @@ window.ContractDetailView = (function () {
             });
         }
 
+        // Initialize datepickers
+        window.UI.initAllDatePickers(root);
+
         // 5. Action Handlers
         window.UI.bindActions(root, {
             "create-pricebook": () => window.UI.openPricebookModal({ contract, onSuccess: () => render(root, contractId, "pricebook") }),
@@ -997,15 +1042,12 @@ window.ContractDetailView = (function () {
                 const pbid = t.getAttribute("data-pbid");
                 const pb = window.Store.pricebooks().find(x => x.id === pbid);
                 const currVal = pb ? (pb.external_pricebook_number || "") : "";
-                const newVal = prompt("Enter new external pricebook number:", currVal);
-                if (newVal !== null && newVal.trim() !== "") {
-                    window.Store.set(s => {
-                        const target = (s.pricebooks || []).find(x => x.id === pbid);
-                        if (target) target.external_pricebook_number = newVal.trim();
-                    });
-                    window.UI.toast({ kind: "success", title: "Pricebook Updated", body: `External pricebook number set to ${newVal.trim()}` });
-                    render(root, cid, "pricebook");
-                }
+                window.UI.openEditExternalPbModal({
+                    pricebookId: pbid,
+                    currentValue: currVal,
+                    contract,
+                    onSuccess: () => render(root, cid, "pricebook")
+                });
             },
 
             "pb-options": (t, e) => {
@@ -1517,7 +1559,16 @@ window.ContractDetailView = (function () {
                             </div>
                             <div>
                                 <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Resolution Deadline</label>
-                                <input type="date" id="perf-deadline" value="${new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10)}" style="width:100%;height:38px;padding:0 10px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;background:#FFF;box-sizing:border-box;">
+                                <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1" style="width:100%;height:38px;">
+                                    <div class="ant-picker-input">
+                                        <input type="text" id="perf-deadline" value="${new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10)}" placeholder="YYYY-MM-DD" autocomplete="off" style="width:100%;height:100%;">
+                                        <span class="ant-picker-suffix">
+                                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -1545,6 +1596,7 @@ window.ContractDetailView = (function () {
         div.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;";
         div.innerHTML = modalHtml;
         document.body.appendChild(div);
+        window.UI.initAllDatePickers(div);
 
         const close = () => { div.remove(); };
         div.querySelector("#perf-create-close").onclick = close;
@@ -1670,7 +1722,16 @@ window.ContractDetailView = (function () {
                             <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:center;">
                                 <input type="text" id="new-act-desc" placeholder="Action description..." style="height:32px;padding:0 8px;border:1px solid #D9D9D9;border-radius:4px;font-size:12.5px;">
                                 <input type="text" id="new-act-assignee" placeholder="Assignee" value="Supplier QA" style="height:32px;padding:0 8px;border:1px solid #D9D9D9;border-radius:4px;font-size:12.5px;">
-                                <input type="date" id="new-act-date" value="${new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)}" style="height:32px;padding:0 8px;border:1px solid #D9D9D9;border-radius:4px;font-size:12.5px;">
+                                <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1" style="height:32px;display:flex;align-items:center;">
+                                    <div class="ant-picker-input">
+                                        <input type="text" id="new-act-date" value="${new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)}" placeholder="YYYY-MM-DD" autocomplete="off" style="font-size:12px;">
+                                        <span class="ant-picker-suffix">
+                                            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
                                 <div style="display:flex;gap:6px;">
                                     <button type="button" id="save-new-act-btn" style="height:32px;padding:0 12px;background:#111827;color:#FFF;border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">Save</button>
                                     <button type="button" id="cancel-new-act-btn" style="height:32px;padding:0 8px;background:#FFF;border:1px solid #D9D9D9;border-radius:4px;font-size:12px;cursor:pointer;">✕</button>
@@ -1730,6 +1791,7 @@ window.ContractDetailView = (function () {
         div.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;";
         div.innerHTML = modalHtml;
         document.body.appendChild(div);
+        window.UI.initAllDatePickers(div);
 
         const close = () => { div.remove(); };
         div.querySelector("#perf-detail-close").onclick = close;
@@ -1762,7 +1824,7 @@ window.ContractDetailView = (function () {
                 const assignee = div.querySelector("#new-act-assignee").value.trim();
                 const due = div.querySelector("#new-act-date").value;
                 if (!desc) {
-                    alert("Please enter an action description.");
+                    window.UI.toast({ kind: "error", title: "Validation Error", body: "Please enter an action description." });
                     return;
                 }
                 window.Store.addPerformanceAction(report.id, {
@@ -1869,7 +1931,16 @@ window.ContractDetailView = (function () {
                             </div>
                             <div>
                                 <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Resolution Deadline</label>
-                                <input type="date" id="edit-perf-deadline" value="${report.deadline || ''}" style="width:100%;height:38px;padding:0 10px;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;background:#FFF;box-sizing:border-box;">
+                                <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1" style="width:100%;height:38px;">
+                                    <div class="ant-picker-input">
+                                        <input type="text" id="edit-perf-deadline" value="${report.deadline || ''}" placeholder="YYYY-MM-DD" autocomplete="off" style="width:100%;height:100%;">
+                                        <span class="ant-picker-suffix">
+                                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -1897,6 +1968,7 @@ window.ContractDetailView = (function () {
         div.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;";
         div.innerHTML = modalHtml;
         document.body.appendChild(div);
+        window.UI.initAllDatePickers(div);
 
         const close = () => { div.remove(); };
         div.querySelector("#perf-edit-close").onclick = close;

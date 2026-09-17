@@ -131,8 +131,30 @@ window.ContractsListView = (function () {
                             `}
 
                             <div class="fc-label">Valid From/To</div>
-                            <div class="fc-date-row" style="margin-bottom:8px;"><input type="date" class="form-input" data-filter="validFrom" value="${window.UI.esc(filterState.validFrom)}" placeholder="YYYY-MM-DD"></div>
-                            <div class="fc-date-row"><input type="date" class="form-input" data-filter="validTo" value="${window.UI.esc(filterState.validTo)}" placeholder="YYYY-MM-DD"></div>
+                            <div class="fc-date-row" style="margin-bottom:8px;">
+                                <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1">
+                                    <div class="ant-picker-input">
+                                        <input type="text" data-filter="validFrom" value="${window.UI.esc(filterState.validFrom)}" placeholder="YYYY-MM-DD" autocomplete="off">
+                                        <span class="ant-picker-suffix">
+                                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fc-date-row">
+                                <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1">
+                                    <div class="ant-picker-input">
+                                        <input type="text" data-filter="validTo" value="${window.UI.esc(filterState.validTo)}" placeholder="YYYY-MM-DD" autocomplete="off">
+                                        <span class="ant-picker-suffix">
+                                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="fc-clear" data-act="clear-all-filters" style="${hasFilters ? "opacity:1;cursor:pointer;" : "opacity:0.5;pointer-events:none;"}">Clear All Filters</div>
                     </aside>
@@ -232,6 +254,9 @@ window.ContractsListView = (function () {
             </div>
             ${window.UI.renderFeedbackBubble ? window.UI.renderFeedbackBubble() : ""}
         `;
+
+        // Initialize datepickers
+        window.UI.initAllDatePickers(root);
 
         // Event bindings
         const searchInput = root.querySelector("#search-here-input");

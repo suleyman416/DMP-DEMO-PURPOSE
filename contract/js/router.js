@@ -23,7 +23,7 @@ window.Router = (function () {
         window.UI.renderHeader();
 
         if (base === "contracts") {
-            if (parts[1] === "new") {
+            if (parts[1] === "new" || parts[1] === "create") {
                 window.ContractFormView.render(root);
             } else if (parts[1] === "edit" && parts[2]) {
                 window.ContractEditView.render(root, parts[2]);

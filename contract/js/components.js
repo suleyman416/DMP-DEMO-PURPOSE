@@ -539,6 +539,75 @@ window.UI = (function () {
         };
     }
 
+    function openEditExternalPbModal(opts) {
+        opts = opts || {};
+        const pbid = opts.pricebookId;
+        const currVal = opts.currentValue || "";
+
+        const modalHtml = `
+            <div class="dmp-modal-backdrop" id="edit-ext-pb-backdrop" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;">
+                <div class="dmp-modal-box" style="background:#FFF;border-radius:8px;width:480px;max-width:94vw;box-shadow:0 12px 30px rgba(0,0,0,0.18);padding:24px 28px;position:relative;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+                        <h2 style="font-size:17px;font-weight:600;color:#111827;margin:0;">Edit external pricebook number</h2>
+                        <button type="button" id="edit-ext-pb-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6B7280;line-height:1;">✕</button>
+                    </div>
+                    <form id="edit-ext-pb-form">
+                        <div style="margin-bottom:20px;">
+                            <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">External pricebook number</label>
+                            <input type="text" id="edit-ext-pb-input" value="${esc(currVal)}" placeholder="Enter external pricebook number" style="width:100%;height:38px;padding:0 12px;border:1px solid #D9D9D9;border-radius:4px;font-size:13px;outline:none;" />
+                            <div style="font-size:11px;color:#9CA3AF;margin-top:4px;">Customer-specific reference number</div>
+                        </div>
+                        <div style="display:flex;justify-content:flex-end;gap:12px;">
+                            <button type="button" id="edit-ext-pb-cancel" style="height:38px;padding:0 18px;border:1px solid #D9D9D9;background:#FFF;color:#374151;border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;">Cancel</button>
+                            <button type="submit" style="height:38px;padding:0 20px;border:none;background:#111827;color:#FFF;border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>`;
+
+        const div = document.createElement("div");
+        div.id = "edit-ext-pb-container";
+        div.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;";
+        div.innerHTML = modalHtml;
+        document.body.appendChild(div);
+
+        const input = div.querySelector("#edit-ext-pb-input");
+        if (input) {
+            setTimeout(() => {
+                input.focus();
+                input.select();
+            }, 50);
+        }
+
+        const close = () => { div.remove(); };
+        div.querySelector("#edit-ext-pb-close").onclick = close;
+        div.querySelector("#edit-ext-pb-cancel").onclick = close;
+        div.querySelector("#edit-ext-pb-backdrop").onclick = e => { if (e.target.id === "edit-ext-pb-backdrop") close(); };
+
+        const handleKey = (e) => {
+            if (e.key === "Escape") {
+                close();
+                document.removeEventListener("keydown", handleKey);
+            }
+        };
+        document.addEventListener("keydown", handleKey);
+
+        div.querySelector("#edit-ext-pb-form").onsubmit = e => {
+            e.preventDefault();
+            document.removeEventListener("keydown", handleKey);
+            const newVal = input.value.trim();
+            if (pbid) {
+                window.Store.set(s => {
+                    const target = (s.pricebooks || []).find(x => x.id === pbid);
+                    if (target) target.external_pricebook_number = newVal;
+                });
+            }
+            close();
+            toast({ kind: "success", title: "Pricebook Updated", body: `External pricebook number set to ${newVal || "(empty)"}` });
+            if (opts.onSuccess) opts.onSuccess(newVal);
+        };
+    }
+
     /* ---------- breadcrumb band matching demov2 ---------- */
     function breadcrumb() {
         const parts = Array.prototype.slice.call(arguments);
@@ -690,6 +759,309 @@ window.UI = (function () {
         }, 120);
     }
 
+    /* -------------------------------------------------------------
+       1:1 DMP Ant Design Calendar DatePicker Component
+       ------------------------------------------------------------- */
+    const MONTH_NAMES = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+    function pad2(n) { return n < 10 ? "0" + n : String(n); }
+
+    function renderDatePickerHTML(opts = {}) {
+        const val = opts.value || "";
+        const name = opts.name || "";
+        const testId = opts.testId || "";
+        const placeholder = opts.placeholder || "YYYY-MM-DD";
+        const req = opts.required ? "required" : "";
+        return `
+            <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1" ${testId ? `data-testid="${testId}"` : ""}>
+                <div class="ant-picker-input">
+                    <input type="text" name="${name}" placeholder="${placeholder}" value="${esc(val)}" autocomplete="off" ${req} ${testId ? `data-testid="${testId}-input"` : ""}>
+                    <span class="ant-picker-suffix">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+        `;
+    }
+
+    function initDatePicker(containerOrInput, opts = {}) {
+        let container = containerOrInput;
+        let input = null;
+
+        if (containerOrInput.tagName === "INPUT") {
+            input = containerOrInput;
+            container = input.closest(".datepicker-t5AVY9, .ant-picker");
+            if (!container) {
+                container = document.createElement("div");
+                container.className = "ant-picker ant-picker-outlined datepicker-t5AVY9";
+                input.parentNode.insertBefore(container, input);
+                const wrapper = document.createElement("div");
+                wrapper.className = "ant-picker-input";
+                wrapper.appendChild(input);
+                container.appendChild(wrapper);
+            }
+        } else {
+            input = container.querySelector("input");
+        }
+
+        if (!input) return;
+        if (container.__dpInitialized) return;
+        container.__dpInitialized = true;
+
+        // Ensure suffix icon exists
+        let suffix = container.querySelector(".ant-picker-suffix");
+        if (!suffix) {
+            const wrap = container.querySelector(".ant-picker-input") || container;
+            suffix = document.createElement("span");
+            suffix.className = "ant-picker-suffix";
+            suffix.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                </svg>
+            `;
+            wrap.appendChild(suffix);
+        }
+
+        let activeDropdown = null;
+
+        const closeDropdown = () => {
+            if (activeDropdown) {
+                activeDropdown.remove();
+                activeDropdown = null;
+                container.classList.remove("ant-picker-focused", "focused");
+                document.removeEventListener("click", onDocClick, true);
+                window.removeEventListener("resize", closeDropdown);
+            }
+        };
+
+        const onDocClick = e => {
+            if (activeDropdown && !activeDropdown.contains(e.target) && !container.contains(e.target)) {
+                closeDropdown();
+            }
+        };
+
+        const openDropdown = () => {
+            // Close any other open datepickers
+            document.querySelectorAll(".ant-picker-dropdown").forEach(d => d.remove());
+
+            container.classList.add("ant-picker-focused", "focused");
+            clearDatePickerError(input);
+
+            // Parse initial date
+            const today = new Date();
+            let viewYear = today.getFullYear();
+            let viewMonth = today.getMonth();
+            let selectedDateStr = (input.value || "").trim();
+
+            if (/^\d{4}-\d{2}-\d{2}$/.test(selectedDateStr)) {
+                const parts = selectedDateStr.split("-");
+                viewYear = parseInt(parts[0], 10);
+                viewMonth = parseInt(parts[1], 10) - 1;
+            }
+
+            activeDropdown = document.createElement("div");
+            activeDropdown.className = "ant-picker-dropdown popup-CWX6Lv ant-picker-dropdown-placement-bottomLeft";
+            document.body.appendChild(activeDropdown);
+
+            // Positioning
+            const rect = container.getBoundingClientRect();
+            let top = rect.bottom + window.scrollY + 4;
+            let left = rect.left + window.scrollX;
+            if (left + 290 > window.innerWidth) {
+                left = Math.max(10, rect.right + window.scrollX - 288);
+            }
+            activeDropdown.style.top = `${top}px`;
+            activeDropdown.style.left = `${left}px`;
+
+            const renderCalendar = (y, m) => {
+                const firstDayIdx = new Date(y, m, 1).getDay(); // 0 = SUN
+                const daysInMonth = new Date(y, m + 1, 0).getDate();
+                const daysInPrevMonth = new Date(y, m, 0).getDate();
+
+                const todayIso = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
+
+                let rowsHtml = "";
+                let dayCounter = 1;
+                let nextMonthDay = 1;
+
+                for (let row = 0; row < 6; row++) {
+                    let colsHtml = "";
+                    for (let col = 0; col < 7; col++) {
+                        const cellIdx = row * 7 + col;
+                        let cellYear = y;
+                        let cellMonth = m;
+                        let cellDay = 0;
+                        let inView = false;
+
+                        if (cellIdx < firstDayIdx) {
+                            // Prev month day
+                            cellDay = daysInPrevMonth - (firstDayIdx - cellIdx - 1);
+                            cellMonth = m - 1;
+                            if (cellMonth < 0) { cellMonth = 11; cellYear = y - 1; }
+                        } else if (dayCounter <= daysInMonth) {
+                            // Current month day
+                            cellDay = dayCounter;
+                            inView = true;
+                            dayCounter++;
+                        } else {
+                            // Next month day
+                            cellDay = nextMonthDay;
+                            cellMonth = m + 1;
+                            if (cellMonth > 11) { cellMonth = 0; cellYear = y + 1; }
+                            nextMonthDay++;
+                        }
+
+                        const dateIso = `${cellYear}-${pad2(cellMonth + 1)}-${pad2(cellDay)}`;
+                        const isToday = dateIso === todayIso;
+                        const isSelected = dateIso === selectedDateStr;
+
+                        let classes = "ant-picker-cell";
+                        if (inView) classes += " ant-picker-cell-in-view";
+                        if (isToday) classes += " ant-picker-cell-today";
+                        if (isSelected) classes += " ant-picker-cell-selected";
+
+                        colsHtml += `
+                            <td class="${classes}" title="${dateIso}" data-date="${dateIso}">
+                                <div class="ant-picker-cell-inner">${cellDay}</div>
+                                <span class="ant-picker-tooltip">${dateIso}</span>
+                            </td>
+                        `;
+                    }
+                    rowsHtml += `<tr>${colsHtml}</tr>`;
+                    if (dayCounter > daysInMonth && row >= 4) break;
+                }
+
+                activeDropdown.innerHTML = `
+                    <div class="ant-picker-panel-container">
+                        <div class="ant-picker-panel">
+                            <div class="ant-picker-date-panel">
+                                <div class="ant-picker-header">
+                                    <button type="button" class="ant-picker-header-super-prev-btn" title="Last year" id="dp-super-prev">&laquo;</button>
+                                    <button type="button" class="ant-picker-header-prev-btn" title="Previous month" id="dp-prev">&lsaquo;</button>
+                                    <div class="ant-picker-header-view">
+                                        <button type="button" class="ant-picker-month-btn">${MONTH_NAMES[m]}</button>
+                                        <button type="button" class="ant-picker-year-btn">${y}</button>
+                                    </div>
+                                    <button type="button" class="ant-picker-header-next-btn" title="Next month" id="dp-next">&rsaquo;</button>
+                                    <button type="button" class="ant-picker-header-super-next-btn" title="Next year" id="dp-super-next">&raquo;</button>
+                                </div>
+                                <div class="ant-picker-body">
+                                    <table class="ant-picker-content">
+                                        <thead>
+                                            <tr>${DAY_NAMES.map(d => `<th>${d}</th>`).join("")}</tr>
+                                        </thead>
+                                        <tbody>${rowsHtml}</tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Bind navigation
+                activeDropdown.querySelector("#dp-super-prev").onclick = e => {
+                    e.stopPropagation();
+                    viewYear -= 1;
+                    renderCalendar(viewYear, viewMonth);
+                };
+                activeDropdown.querySelector("#dp-prev").onclick = e => {
+                    e.stopPropagation();
+                    viewMonth -= 1;
+                    if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; }
+                    renderCalendar(viewYear, viewMonth);
+                };
+                activeDropdown.querySelector("#dp-next").onclick = e => {
+                    e.stopPropagation();
+                    viewMonth += 1;
+                    if (viewMonth > 11) { viewMonth = 0; viewYear += 1; }
+                    renderCalendar(viewYear, viewMonth);
+                };
+                activeDropdown.querySelector("#dp-super-next").onclick = e => {
+                    e.stopPropagation();
+                    viewYear += 1;
+                    renderCalendar(viewYear, viewMonth);
+                };
+
+                // Bind date cell clicks
+                activeDropdown.querySelectorAll("td[data-date]").forEach(td => {
+                    td.onclick = e => {
+                        e.stopPropagation();
+                        const picked = td.getAttribute("data-date");
+                        input.value = picked;
+                        selectedDateStr = picked;
+                        clearDatePickerError(input);
+                        input.dispatchEvent(new Event("input", { bubbles: true }));
+                        input.dispatchEvent(new Event("change", { bubbles: true }));
+                        if (opts.onSelect) opts.onSelect(picked);
+                        closeDropdown();
+                    };
+                });
+            };
+
+            renderCalendar(viewYear, viewMonth);
+
+            setTimeout(() => {
+                document.addEventListener("click", onDocClick, true);
+                window.addEventListener("resize", closeDropdown);
+            }, 10);
+        };
+
+        container.onclick = e => {
+            if (activeDropdown) {
+                if (e.target === input) return;
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        };
+
+        input.onfocus = () => {
+            if (!activeDropdown) openDropdown();
+        };
+
+        input.onkeydown = e => {
+            if (e.key === "Escape") closeDropdown();
+        };
+    }
+
+    function setDatePickerError(inputEl, msg) {
+        if (!inputEl) return;
+        const container = inputEl.closest(".ant-picker, .datepicker-t5AVY9");
+        if (container) {
+            container.classList.add("has-error");
+            let errEl = container.nextElementSibling;
+            if (!errEl || !errEl.classList.contains("field-error-message")) {
+                errEl = document.createElement("div");
+                errEl.className = "field-error-message";
+                container.parentNode.insertBefore(errEl, container.nextSibling);
+            }
+            errEl.textContent = msg;
+        }
+    }
+
+    function clearDatePickerError(inputEl) {
+        if (!inputEl) return;
+        const container = inputEl.closest(".ant-picker, .datepicker-t5AVY9");
+        if (container) {
+            container.classList.remove("has-error");
+            const errEl = container.nextElementSibling;
+            if (errEl && errEl.classList.contains("field-error-message")) {
+                errEl.remove();
+            }
+        }
+    }
+
+    function initAllDatePickers(root = document) {
+        const containers = root.querySelectorAll("[data-datepicker='1'], .datepicker-t5AVY9, .ant-picker");
+        containers.forEach(c => initDatePicker(c));
+    }
+
     return {
         esc,
         go,
@@ -710,6 +1082,12 @@ window.UI = (function () {
         openPhotoModal,
         emptyFolder,
         openPricebookModal,
-        showActionMenu
+        openEditExternalPbModal,
+        showActionMenu,
+        renderDatePickerHTML,
+        initDatePicker,
+        setDatePickerError,
+        clearDatePickerError,
+        initAllDatePickers
     };
 })();

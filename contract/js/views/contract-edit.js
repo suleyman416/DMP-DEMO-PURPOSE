@@ -37,7 +37,7 @@ window.ContractEditView = (function () {
                     </button>
                 </div>
 
-                <form class="form-XpEBZm" id="edit-contract-form" data-testid="contracts-edit-form">
+                <form class="form-XpEBZm" id="edit-contract-form" data-testid="contracts-edit-form" novalidate>
                     <h1 class="typography-URURkd h6-MQAZXu title-QhK2vn" data-testid="contracts-edit-title" style="font-size: 24px; font-weight: 600; color: #111827; margin: 0 0 28px 0;">Edit contract</h1>
                     
                     <div class="formGrid-PTja0j" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px 32px;">
@@ -50,9 +50,9 @@ window.ContractEditView = (function () {
                         </div>
 
                         <div class="form-group" style="display:flex;flex-direction:column;gap:8px;">
-                            <label class="label-ZMZNIV required-uOw3_8" style="font-size:13px;font-weight:500;color:#374151;">* Contract approved value</label>
+                            <label class="label-ZMZNIV" style="font-size:13px;font-weight:500;color:#374151;">Supplier ID</label>
                             <div class="container-FyufBC">
-                                <input class="input-YKgOhO form-input" style="width:100%;height:40px;border:1px solid #D9D9D9;border-radius:6px;padding:0 12px;" placeholder="Enter value" name="approved_value" type="number" step="0.01" value="${contract.approved_value || 18990}" required>
+                                <input class="input-YKgOhO form-input" style="width:100%;height:40px;background:#F5F5F5;border:1px solid #D9D9D9;border-radius:6px;padding:0 12px;color:#595959;cursor:not-allowed;" disabled type="text" value="${window.UI.esc(contract.supplier_id || '5')}">
                             </div>
                         </div>
 
@@ -70,6 +70,13 @@ window.ContractEditView = (function () {
                         </div>
 
                         <!-- Row 2 -->
+                        <div class="form-group" style="display:flex;flex-direction:column;gap:8px;">
+                            <label class="label-ZMZNIV required-uOw3_8" style="font-size:13px;font-weight:500;color:#374151;">* Contract approved value</label>
+                            <div class="container-FyufBC">
+                                <input class="input-YKgOhO form-input" style="width:100%;height:40px;border:1px solid #D9D9D9;border-radius:6px;padding:0 12px;" placeholder="Enter value" name="approved_value" type="number" step="0.01" value="${contract.approved_value || 18990}" required>
+                            </div>
+                        </div>
+
                         <div class="form-group" style="display:flex;flex-direction:column;gap:8px;">
                             <label class="label-ZMZNIV required-uOw3_8" style="font-size:13px;font-weight:500;color:#374151;">* External contract #</label>
                             <div class="container-FyufBC">
@@ -90,6 +97,7 @@ window.ContractEditView = (function () {
                             </div>
                         </div>
 
+                        <!-- Row 3 -->
                         <div class="form-group" style="display:flex;flex-direction:column;gap:8px;">
                             <label class="label-ZMZNIV required-uOw3_8" style="font-size:13px;font-weight:500;color:#374151;">* Contract description</label>
                             <div class="container-FyufBC">
@@ -97,21 +105,35 @@ window.ContractEditView = (function () {
                             </div>
                         </div>
 
-                        <!-- Row 3 -->
                         <div class="form-group" style="display:flex;flex-direction:column;gap:8px;">
                             <label class="label-ZMZNIV required-uOw3_8" style="font-size:13px;font-weight:500;color:#374151;">* Contract start date</label>
-                            <div class="datepicker-t5AVY9" style="position:relative;display:flex;align-items:center;">
-                                <input type="date" name="valid_from" class="form-input" style="width:100%;height:40px;border:1px solid #D9D9D9;border-radius:6px;padding:0 12px;" value="${window.UI.esc(contract.valid_from || '')}" required>
+                            <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1" data-testid="contracts-edit-start-date">
+                                <div class="ant-picker-input">
+                                    <input type="text" name="valid_from" data-testid="contracts-edit-start-date-input" value="${window.UI.esc(contract.valid_from || '')}" placeholder="YYYY-MM-DD" autocomplete="off" required>
+                                    <span class="ant-picker-suffix">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                        </svg>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group" style="display:flex;flex-direction:column;gap:8px;">
                             <label class="label-ZMZNIV required-uOw3_8" style="font-size:13px;font-weight:500;color:#374151;">* Contract end date</label>
-                            <div class="datepicker-t5AVY9" style="position:relative;display:flex;align-items:center;">
-                                <input type="date" name="valid_to" class="form-input" style="width:100%;height:40px;border:1px solid #D9D9D9;border-radius:6px;padding:0 12px;" value="${window.UI.esc(contract.valid_to || '')}" required>
+                            <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1" data-testid="contracts-edit-end-date">
+                                <div class="ant-picker-input">
+                                    <input type="text" name="valid_to" data-testid="contracts-edit-end-date-input" value="${window.UI.esc(contract.valid_to || '')}" placeholder="YYYY-MM-DD" autocomplete="off" required>
+                                    <span class="ant-picker-suffix">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                        </svg>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
+                        <!-- Row 4 -->
                         <div class="form-group" style="display:flex;flex-direction:column;gap:8px;">
                             <label class="label-ZMZNIV required-uOw3_8" style="font-size:13px;font-weight:500;color:#374151;">* Region</label>
                             <div class="select-wrapper" style="position:relative;">
@@ -146,9 +168,21 @@ window.ContractEditView = (function () {
             ${window.UI.renderFeedbackBubble ? window.UI.renderFeedbackBubble() : ""}
         `;
 
+        // Initialize datepickers
+        window.UI.initAllDatePickers(root);
+
         // Event handling
         const form = root.querySelector("#edit-contract-form");
         if (form) {
+            if (form.valid_from) {
+                form.valid_from.addEventListener("input", () => window.UI.clearDatePickerError(form.valid_from));
+                form.valid_from.addEventListener("change", () => window.UI.clearDatePickerError(form.valid_from));
+            }
+            if (form.valid_to) {
+                form.valid_to.addEventListener("input", () => window.UI.clearDatePickerError(form.valid_to));
+                form.valid_to.addEventListener("change", () => window.UI.clearDatePickerError(form.valid_to));
+            }
+
             form.addEventListener("submit", e => {
                 e.preventDefault();
                 const desc = form.description.value.trim();
@@ -157,9 +191,36 @@ window.ContractEditView = (function () {
                 const dept = form.department_name.value;
                 const reg = form.region.value.trim();
                 const val = parseFloat(form.approved_value.value);
-                const vf = form.valid_from.value;
-                const vt = form.valid_to.value;
+                const vf = form.valid_from ? form.valid_from.value.trim() : "";
+                const vt = form.valid_to ? form.valid_to.value.trim() : "";
                 const owner = form.procurement_contract_owner.value.trim();
+
+                window.UI.clearDatePickerError(form.valid_from);
+                window.UI.clearDatePickerError(form.valid_to);
+
+                let hasError = false;
+                if (!vf) {
+                    window.UI.setDatePickerError(form.valid_from, "Start date is required");
+                    hasError = true;
+                }
+                if (!vt) {
+                    window.UI.setDatePickerError(form.valid_to, "End date is required");
+                    hasError = true;
+                } else if (vf && vt && vf > vt) {
+                    window.UI.setDatePickerError(form.valid_to, "End date cannot be earlier than start date");
+                    hasError = true;
+                }
+
+                if (!desc || !ext || isNaN(val) || !dept || !reg || !cam || !owner || hasError) {
+                    if (!hasError) {
+                        window.UI.toast({
+                            kind: "error",
+                            title: "Validation Error",
+                            body: "Please complete all required fields marked with *."
+                        });
+                    }
+                    return;
+                }
 
                 window.Store.set(s => {
                     const idx = (s.contracts || []).findIndex(c => String(c.id) === String(contract.id));

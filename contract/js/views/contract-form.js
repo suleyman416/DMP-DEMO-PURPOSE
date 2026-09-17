@@ -32,7 +32,7 @@ window.ContractFormView = (function () {
                     </button>
                 </div>
 
-                <form class="form-XpEBZm" id="new-contract-form" data-testid="contracts-create-form">
+                <form class="form-XpEBZm" id="new-contract-form" data-testid="contracts-create-form" novalidate>
                     <span class="typography-URURkd h6-MQAZXu title-QhK2vn" data-testid="contracts-create-title">Create contract</span>
                     <div class="formGrid-PTja0j">
                         <!-- Col 1 -->
@@ -53,9 +53,15 @@ window.ContractFormView = (function () {
 
                         <!-- Col 2 -->
                         <div class="form-group">
-                            <label class="label-ZMZNIV">Supplier ID</label>
-                            <div class="container-FyufBC">
-                                <input class="input-YKgOhO" placeholder="Enter supplier ID" disabled="" id="supplier-id-input" data-testid="contracts-create-supplier-id" type="text" value="">
+                            <label class="label-ZMZNIV required-uOw3_8">Department</label>
+                            <div class="ant-select select-l8uECl" data-testid="contracts-create-department">
+                                <select name="department_name" required>
+                                    <option value="" selected disabled>Select department</option>
+                                    <option value="Procurement">Procurement</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="Logistics">Logistics</option>
+                                    <option value="Finance">Finance</option>
+                                </select>
                             </div>
                         </div>
 
@@ -102,21 +108,29 @@ window.ContractFormView = (function () {
                         <!-- Row 3 -->
                         <div class="form-group">
                             <label class="label-ZMZNIV required-uOw3_8">Contract start date</label>
-                            <div class="datepicker-t5AVY9" data-testid="contracts-create-start-date">
-                                <input type="text" name="valid_from" data-testid="contracts-create-start-date-input" value="" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
-                                </svg>
+                            <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1" data-testid="contracts-create-start-date">
+                                <div class="ant-picker-input">
+                                    <input type="text" name="valid_from" data-testid="contracts-create-start-date-input" value="" placeholder="YYYY-MM-DD" autocomplete="off" required>
+                                    <span class="ant-picker-suffix">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                        </svg>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="label-ZMZNIV required-uOw3_8">Contract end date</label>
-                            <div class="datepicker-t5AVY9" data-testid="contracts-create-end-date">
-                                <input type="text" name="valid_to" data-testid="contracts-create-end-date-input" value="" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
-                                </svg>
+                            <div class="ant-picker ant-picker-outlined datepicker-t5AVY9" data-datepicker="1" data-testid="contracts-create-end-date">
+                                <div class="ant-picker-input">
+                                    <input type="text" name="valid_to" data-testid="contracts-create-end-date-input" value="" placeholder="YYYY-MM-DD" autocomplete="off" required>
+                                    <span class="ant-picker-suffix">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.8 0L13.8 6M4.20003 0L4.20003 6M16.2 3L1.80003 3C1.13727 3 0.600025 3.53726 0.600025 4.2L0.600025 16.2C0.600025 16.8628 1.13727 17.4 1.80003 17.4L16.2 17.4C16.8628 17.4 17.4 16.8628 17.4 16.2L17.4 4.2C17.4 3.53726 16.8628 3 16.2 3Z" stroke="#666666"></path>
+                                        </svg>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
@@ -202,7 +216,19 @@ window.ContractFormView = (function () {
             });
         }
 
+        // Initialize datepickers
+        window.UI.initAllDatePickers(root);
+
         const form = root.querySelector("#new-contract-form");
+        if (form.valid_from) {
+            form.valid_from.addEventListener("input", () => window.UI.clearDatePickerError(form.valid_from));
+            form.valid_from.addEventListener("change", () => window.UI.clearDatePickerError(form.valid_from));
+        }
+        if (form.valid_to) {
+            form.valid_to.addEventListener("input", () => window.UI.clearDatePickerError(form.valid_to));
+            form.valid_to.addEventListener("change", () => window.UI.clearDatePickerError(form.valid_to));
+        }
+
         form.addEventListener("submit", e => {
             e.preventDefault();
             const desc = form.description.value.trim();
@@ -212,12 +238,34 @@ window.ContractFormView = (function () {
             const dept = form.department_name.value;
             const reg = form.region.value.trim();
             const val = parseFloat(form.approved_value.value);
-            const vf = form.valid_from.value;
-            const vt = form.valid_to.value;
+            const vf = form.valid_from ? form.valid_from.value.trim() : "";
+            const vt = form.valid_to ? form.valid_to.value.trim() : "";
             const owner = form.procurement_contract_owner.value.trim();
 
-            if (!desc || !ext || !sup || isNaN(val)) {
-                alert("Please complete all required fields marked with *.");
+            window.UI.clearDatePickerError(form.valid_from);
+            window.UI.clearDatePickerError(form.valid_to);
+
+            let hasError = false;
+            if (!vf) {
+                window.UI.setDatePickerError(form.valid_from, "Start date is required");
+                hasError = true;
+            }
+            if (!vt) {
+                window.UI.setDatePickerError(form.valid_to, "End date is required");
+                hasError = true;
+            } else if (vf && vt && vf > vt) {
+                window.UI.setDatePickerError(form.valid_to, "End date cannot be earlier than start date");
+                hasError = true;
+            }
+
+            if (!desc || !ext || !sup || isNaN(val) || !dept || !reg || !cam || !owner || hasError) {
+                if (!hasError) {
+                    window.UI.toast({
+                        kind: "error",
+                        title: "Validation Error",
+                        body: "Please complete all required fields marked with *."
+                    });
+                }
                 return;
             }
 
